@@ -1,9 +1,11 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
+import { Link, useHistory } from 'react-router-dom';
+import Swal from 'sweetalert2'
 
 function Cart(props) {
     const cartJson = localStorage.getItem('cart');
-    const [arrayCart, setarrayCart] = useState(JSON.parse(cartJson))
+    const [arrayCart, setarrayCart] = useState(cartJson.length <= 0 ? [] : JSON.parse(cartJson))
     let total_weight = arrayCart.reduce((total, value ,index) => {
         return total += (value.price * value.number)
     }, 0)
@@ -110,11 +112,18 @@ function Cart(props) {
                             </td>
                         </tr>
                         ))}
-                        <div className=""><h5>{totalPrice}</h5></div>
+             
 
 
                         </tbody>
                     </table>
+                    </div>
+                    <div className="row">
+                            <div className="col-md-10"></div>
+                            <div className="col-md-2">
+                                <h4>Tổng tiền : {totalPrice}</h4>
+                                <Link to={'/gio-hang/thanh-toan'} className="btn btn-primary">Thanh toan</Link>
+                                </div>
                     </div>
                 </div>
                 </section> {/*/#cart_items*/}

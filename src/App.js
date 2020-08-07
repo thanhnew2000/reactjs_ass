@@ -2,9 +2,9 @@ import React, { useState, useEffect } from 'react';
 import logo from './logo.svg';
 import './App.css';
 import Header from './components/client/Header';
-import Home from './components/client/Home';
-import Footer from './components/client/Footer';
-import Categorie from './components/client/Categorie';
+// import Home from './components/client/Home';
+// import Footer from './components/client/Footer';
+// import Categorie from './components/client/Categorie';
 import RouteApp from './route/Route';
 import axios from 'axios';
 import {
@@ -12,8 +12,8 @@ import {
   Link,
   Redirect,
 } from "react-router-dom";
-import Pagination from './components/client/Pagination';
-
+// import Pagination from './components/client/Pagination';
+import apiRequest from './api/productApi';
 
 
 function App() {
@@ -29,6 +29,7 @@ function App() {
     async function getList(){
       try{
         const {data} = await axios.get("http://localhost:8000/api/cate");
+        // let newDatas = data.filter((el,index)=> (el.id != 999))
         setDanhSach(data);
       }catch(error){
         console.log(error);
@@ -40,7 +41,7 @@ function App() {
   useEffect(() => {
     async function getListProduct(){
       try{
-        const {data} = await axios.get("http://localhost:8000/api/product");
+        const {data} = await apiRequest.getAll();
         setSanPham(data);
       }catch(error){
         console.log(error);

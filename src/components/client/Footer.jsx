@@ -4,7 +4,7 @@ const Footer = () => {
     return (
         <div>
         <footer id="footer">{/*Footer*/}
-        <div className="footer-top">
+        {/* <div className="footer-top">
           <div className="container">
             <div className="row">
               <div className="col-sm-2">
@@ -79,7 +79,7 @@ const Footer = () => {
               </div>
             </div>
           </div>
-        </div>
+        </div> */}
         <div className="footer-widget">
           <div className="container">
             <div className="row">
@@ -132,14 +132,12 @@ const Footer = () => {
                 </div>
               </div>
               <div className="col-sm-3 col-sm-offset-1">
-                <div className="single-widget">
-                  <h2>About Shopper</h2>
-                  <form action="#" className="searchform">
-                    <input type="text" placeholder="Your email address" />
-                    <button type="submit" className="btn btn-default"><i className="fa fa-arrow-circle-o-right" /></button>
-                    <p>Get the most recent updates from <br />our site and be updated your self...</p>
-                  </form>
-                </div>
+                {/* <div className="single-widget"> */}
+                  <div className="companyinfo mb-5">
+                    <h2><span>e</span>-shopper</h2>
+                    <p>Cảm ơn đã ghé shop</p>
+                  </div>
+                {/* </div> */}
               </div>
             </div>
           </div>

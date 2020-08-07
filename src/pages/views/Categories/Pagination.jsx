@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 
 function Pagination({productPerPage,totolProduct,paginate}) {
-
+console.log(2)
     const  pageNumbers =[];
     for(let i = 1 ; i <= Math.ceil(totolProduct / productPerPage);i++){
         pageNumbers.push(i)

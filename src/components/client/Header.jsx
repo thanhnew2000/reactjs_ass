@@ -1,8 +1,50 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 
 const Header = (props) => {
   let {danhsach} = props;
+  let menuDanhSach = danhsach.filter(el => (el.id <= 4 && el.id !== 1 ));
+  const [user,setUser] = useState({});
+  const [keySreach,setKeySeach] = useState({});
+  var localUser = localStorage.getItem('user');
+
+  var styleDaDangNhap={};
+  var styleChuaDangNhap={};
+  if(localUser != null){
+    styleDaDangNhap = {display:'block'};
+    styleChuaDangNhap = {display:'none'};
+  }else{
+    styleDaDangNhap = {display:'none'};
+    styleChuaDangNhap = {display:'block'};
+  }
+
+  useEffect(() => {
+  function getInfoUser(){
+      try{
+        if(localUser != null){
+          var localUserParse = JSON.parse(localUser);
+          setUser(localUserParse);
+        }
+      }catch(error){
+        console.log(error);
+      }
+    }
+    getInfoUser()
+  }, []);
+
+  const onHandleChange = (e) => {
+    const {name,value} = e.target
+    setKeySeach({
+        ...keySreach,
+        [name]:value
+    })
+  }
+
+  const logout = () =>{
+    localStorage.removeItem('user');
+    localStorage.removeItem('cart');
+    window.location.reload();
+  }
     return (
       <div>
       <header id="header">{/*header*/}
@@ -12,8 +54,8 @@ const Header = (props) => {
             <div className="col-sm-6">
               <div className="contactinfo">
                 <ul className="nav nav-pills">
-                  <li><a href="#"><i className="fa fa-phone" /> +2 95 01 88 821</a></li>
-                  <li><a href="#"><i className="fa fa-envelope" /> info@domain.com</a></li>
+                  <li><a href="#"><i className="fa fa-phone" /> +84 99 99 99 79</a></li>
+                  <li><a href="#"><i className="fa fa-envelope" /> eshop@gmail.com</a></li>
                 </ul>
               </div>
             </div>
@@ -36,41 +78,56 @@ const Header = (props) => {
           <div className="row">
             <div className="col-md-4 clearfix">
               <div className="logo pull-left">
-                <a href="index.html"><img src="client/images/home/logo.png" alt="" /></a>
+                <a href="index.html"><img src="../../client/images/home/logo.png" alt="" /></a>
               </div>
-              <div className="btn-group pull-right clearfix">
-                <div className="btn-group">
-                  <button type="button" className="btn btn-default dropdown-toggle usa" data-toggle="dropdown">
-                    USA
-                    <span className="caret" />
-                  </button>
-                  <ul className="dropdown-menu">
-                    <li><a href>Canada</a></li>
-                    <li><a href>UK</a></li>
-                  </ul>
-                </div>
-                <div className="btn-group">
-                  <button type="button" className="btn btn-default dropdown-toggle usa" data-toggle="dropdown">
-                    DOLLAR
-                    <span className="caret" />
-                  </button>
-                  <ul className="dropdown-menu">
-                    <li><a href>Canadian Dollar</a></li>
-                    <li><a href>Pound</a></li>
-                  </ul>
-                </div>
+          
+            </div>
+            <div className="col-md-4">
+              {/* <div className="col-md-10">
+                <input type="text" className="form-control" name="key" onChange={onHandleChange} />
+              </div>
+              <div className="col-md-2">
+                 <a  href={'../tim-kiem/'+keySreach.key} className="btn btn-flat" id="search-btn">    <i className="fa fa-search" /></a>
+              </div> */}
+              <div className="input-group">
+              <input type="text" className="form-control" name="key" onChange={onHandleChange} />
+                  <span className="input-group-btn">
+                    <a  href={'../tim-kiem/'+keySreach.key}  name="search" id="search-btn" className="btn btn-outline-warning"><i className="fa fa-search" />
+                    </a>
+                  </span>
               </div>
             </div>
-            <div className="col-md-8 clearfix">
+
+
+            <div className="col-md-4 clearfix" style={styleDaDangNhap}>
               <div className="shop-menu clearfix pull-right">
                 <ul className="nav navbar-nav">
-                  <li><a href><i className="fa fa-user" /> Account</a></li>
-                  <li><a href="checkout.html"><i className="fa fa-crosshairs" /> Checkout</a></li>
-                  <li><Link to={'/gio-hang'}><i className="fa fa-shopping-cart" /> Cart</Link></li>
-                  <li><a href="login.html"><i className="fa fa-lock" /> Login</a></li>
+                 <li ><Link to={'/thongtincanhan'}>
+                   <i className="fa fa-user" />Chào :
+                    {user.name}</Link></li>
+                  {/* <li><a href="checkout.html"><i className="fa fa-crosshairs" /> Checkout</a></li> */}
+                  <li><Link to={'/gio-hang'}>
+                    <i className="fa fa-shopping-cart" />
+                     Cart</Link></li>
+                  {/* <li><a href="login.html"><i className="fa fa-lock" /> Login</a></li> */}
+                  <li><a href="" onClick={logout}> Đăng xuất</a></li>
                 </ul>
               </div>
             </div>
+
+            <div className="col-md-4 clearfix" style={styleChuaDangNhap}>
+              <div className="shop-menu clearfix pull-right">
+                <ul className="nav navbar-nav">
+                  <li><Link to={'/gio-hang'}>
+                    <i className="fa fa-shopping-cart" />
+                     Cart</Link></li>
+                  <li><Link to={'/dangnhap'}><i className="fa fa-lock" /> Đăng nhập</Link></li>
+                  <li><Link to={'/dangky'}><i className="fa fa-lock" /> Đăng ký</Link></li>
+                </ul>
+              </div>
+            </div>
+
+
           </div>
         </div>
       </div>{/*/header-middle*/}
@@ -91,7 +148,7 @@ const Header = (props) => {
                   <li><Link  to={'../'} 
                   // className="active"
                   >Home</Link></li>
-                  {danhsach.map((ds,index) => (
+                  {menuDanhSach.map((ds,index) => (
                    <li key={index}> <Link to={'../danh-muc/'+ds.id} >{ds.name_category}</Link></li>
                   ))}
 
@@ -103,15 +160,20 @@ const Header = (props) => {
                     </ul>
                   </li>  */}
               
-                  <li><Link to={'../lien-he/'}>Contact</Link></li>
+                  <li><Link to={'../lien-he/'}>Liên Hệ</Link></li>
                 </ul>
               </div>
             </div>
+            {/* <form action="" method="get"> */}
             <div className="col-sm-3">
-              <div className="search_box pull-right">
-                <input type="text" placeholder="Search" />
-              </div>
+              {/* <div className="search pull-right">
+                
+                <input type="text"  name="key" onChange={onHandleChange} />
+                <a  href={'../tim-kiem/'+keySreach.key}>Tìm kiếm</a>
+              </div> */}
             </div>
+            {/* </form> */}
+
           </div>
         </div>
       </div>{/*/header-bottom*/}

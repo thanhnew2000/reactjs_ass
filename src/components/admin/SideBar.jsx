@@ -1,19 +1,22 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import { Link } from 'react-router-dom'
 
 function SideBar(props) {
+  var localUser = localStorage.getItem('user');
+  var localUserParse = JSON.parse(localUser);
+
     return (
-        <div>
              <aside className="main-sidebar">
         {/* sidebar: style can be found in sidebar.less */}
         <section className="sidebar">
           {/* Sidebar user panel */}
           <div className="user-panel">
             <div className="pull-left image">
-              <img src="../../admin/dist/img/user2-160x160.jpg" className="img-circle" alt="User Image" />
+              <img src={localUserParse.avatar} className="img-circle" alt="User Image" />
             </div>
             <div className="pull-left info">
-              <p>Alexander Pierce</p>
+              <p>{localUserParse.name}</p>
               <a href="#"><i className="fa fa-circle text-success" /> Online</a>
             </div>
           </div>
@@ -41,37 +44,82 @@ function SideBar(props) {
             </li>
 
             <li>
-              <a href="pages/widgets.html">
+              <Link to={'../../admin/products'}>
                 <i className="fa fa-th" /> <span>Product</span>
                 <span className="pull-right-container">
                   <small className="label pull-right bg-green">new</small>
                 </span>
-              </a>
+              </Link>
             </li>
             <li>
-              <a href="pages/calendar.html">
-                <i className="fa fa-calendar" /> <span>Calendar</span>
+              <Link to={'../../admin/danhmuc'}>
+                <i className="fa fa-th" /> <span>Danh sách</span>
                 <span className="pull-right-container">
-                  <small className="label pull-right bg-red">3</small>
-                  <small className="label pull-right bg-blue">17</small>
+                  <small className="label pull-right bg-green">new</small>
                 </span>
-              </a>
+              </Link>
             </li>
             <li>
-              <a href="pages/mailbox/mailbox.html">
-                <i className="fa fa-envelope" /> <span>Mailbox</span>
+              <Link to={'../../admin/contacts'}>
+                <i className="fa fa-envelope" /> <span>Contact</span>
                 <span className="pull-right-container">
+                <small className="label pull-right bg-green">new</small>
+{/* 
                   <small className="label pull-right bg-yellow">12</small>
                   <small className="label pull-right bg-green">16</small>
-                  <small className="label pull-right bg-red">5</small>
+                  <small className="label pull-right bg-red">5</small> */}
                 </span>
-              </a>
+              </Link>
             </li>
+            <li>
+              <Link to={'../../admin/order'}>
+                <i className="fa fa-th" /> <span>Đơn hàng</span>
+                <span className="pull-right-container">
+                  <small className="label pull-right bg-green">new</small>
+                </span>
+              </Link>
+            </li>
+
+            <li>
+              <Link to={'../../admin/post'}>
+                <i className="fa fa-th" /> <span>Bài viết</span>
+                <span className="pull-right-container">
+                  <small className="label pull-right bg-green">new</small>
+                </span>
+              </Link>
+            </li>
+
+            <li>
+              <Link to={'../../admin/catePost'}>
+                <i className="fa fa-th" /> <span>Danh mục bài viết</span>
+                <span className="pull-right-container">
+                  <small className="label pull-right bg-green">new</small>
+                </span>
+              </Link>
+            </li>
+
+            <li>
+              <Link to={'../../admin/tai-khoan'}>
+                <i className="fa fa-th" /> <span>Tài khoản</span>
+                <span className="pull-right-container">
+                  <small className="label pull-right bg-green">new</small>
+                </span>
+              </Link>
+            </li>
+
+            <li>
+              <Link to={'../../admin/slide-show'}>
+                <i className="fa fa-th" /> <span>SlideShow</span>
+                <span className="pull-right-container">
+                  <small className="label pull-right bg-green">new</small>
+                </span>
+              </Link>
+            </li>
+
           </ul>
         </section>
         {/* /.sidebar */}
       </aside>
-        </div>
     )
 }
 

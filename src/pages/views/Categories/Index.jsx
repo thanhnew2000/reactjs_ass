@@ -1,13 +1,16 @@
 import React, { useState } from 'react'
 import { Link, useParams } from 'react-router-dom';
 import Pagination from './Pagination';
+import functionAddCart from '../Cart/functionAddCart'
+import Swal from 'sweetalert2'
 
 const Categorie = (props) => {
   let {id} = useParams();
   const {products2} = props;
   const  listProduct_cate = products2.filter(product => product.id_category == id);
   const {danhsach} = props;
-  const danhsach_detail = danhsach.find(product => product.id == id);
+  const danhsachHavefillter =danhsach.filter(el => el.id !== 1);
+  const danhsachHavefillter_detail = danhsachHavefillter.find(product => product.id == id);
   const styleContanerImage={
       position: 'relative',
       'text-align': 'center',
@@ -19,9 +22,25 @@ const Categorie = (props) => {
     left: '50%',
     transform: 'translate(-50%, -50%)',
 }
+
+
+function addCart(pro){
+  const arrayCart2 = functionAddCart.addCart(pro)
+   var arrayCartJson = JSON.stringify(arrayCart2);
+   localStorage.setItem('cart',arrayCartJson);
+
+   Swal.fire({
+     title: 'Thêm giỏ hàng thành công ',
+     icon: 'success',
+     showCancelButton: false,
+     times:1000,
+   })
+}
+
+
 // phân trang
 const [currentProduct, setCurrentProduct] = useState(1);
-const [productPerpage] = useState(2);
+const [productPerpage] = useState(6);
 const indexOflastProduct = currentProduct * productPerpage;
 const indexOfFirstProduct = indexOflastProduct - productPerpage;
 const paginati_Product = listProduct_cate.slice(indexOfFirstProduct,indexOflastProduct);
@@ -42,7 +61,7 @@ const paginate = productNumber => (setCurrentProduct(productNumber));
                 <div className="left-sidebar">
                   <h2>Category</h2>
                   <div className="panel-group category-products" id="accordian">{/*category-productsr*/}
-                {danhsach.map((ds,index) => (
+                {danhsachHavefillter.map((ds,index) => (
                     <div className="panel panel-default" key={index}>
                       <div className="panel-heading">
                          <h4 className="panel-title">
@@ -52,7 +71,7 @@ const paginate = productNumber => (setCurrentProduct(productNumber));
                 ))}
                   </div>{/*/category-productsr*/}
                   
-                  <div className="brands_products">{/*brands_products*/}
+                  {/* <div className="brands_products">
                     <h2>Brands</h2>
                     <div className="brands-name">
                       <ul className="nav nav-pills nav-stacked">
@@ -65,14 +84,14 @@ const paginate = productNumber => (setCurrentProduct(productNumber));
                         <li><a href> <span className="pull-right">(4)</span>Rösch creative culture</a></li>
                       </ul>
                     </div>
-                  </div>{/*/brands_products*/}
-                  <div className="price-range">{/*price-range*/}
+                  </div> */}
+                  {/* <div className="price-range">
                     <h2>Price Range</h2>
                     <div className="well">
                       <input type="text" className="span2" defaultValue data-slider-min={0} data-slider-max={600} data-slider-step={5} data-slider-value="[250,450]" id="sl2" /><br />
                       <b>$ 0</b> <b className="pull-right">$ 600</b>
                     </div>
-                  </div>{/*/price-range*/}
+                  </div> */}
                   <div className="shipping text-center">{/*shipping*/}
                     <img src="../client/images/home/shipping.jpg" alt="" />
                   </div>{/*/shipping*/}
@@ -95,13 +114,13 @@ const paginate = productNumber => (setCurrentProduct(productNumber));
                           <div className="overlay-content">
                             <h2>{pro.name_product}</h2>
                             <p>{pro.short_description}</p>
-                            <a href="#" className="btn btn-default add-to-cart"><i className="fa fa-shopping-cart" />Thêm giỏ hàng</a>
+                            <a  onClick={() => addCart(pro)} className="btn btn-default add-to-cart"><i className="fa fa-shopping-cart" />Thêm giỏ hàng</a>
                           </div>
                         </div>
                       </div>
                       <div className="choose">
                         <ul className="nav nav-pills nav-justified">
-                          <li><a href="#"><i className="fa fa-plus-square" />Xem chi tiết</a></li>
+                        <li> <Link to={'../san-pham/'+pro.id_category+'/'+pro.id}><i className="fa fa-plus-square" />Xem chi tiết</Link></li>
                           {/* <li><a href="#"><i className="fa fa-plus-square" />Add to compare</a></li> */}
                         </ul>
                       </div>

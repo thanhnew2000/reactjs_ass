@@ -1,17 +1,19 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import { Link } from 'react-router-dom';
 
 function TopBar(props) {
+  var localUser = localStorage.getItem('user');
+  var localUserParse = JSON.parse(localUser);
     return (
-        <div>
              <header className="main-header">
         {/* Logo */}
-        <a href="index2.html" className="logo">
+        <Link to="../../" className="logo">
           {/* mini logo for sidebar mini 50x50 pixels */}
           <span className="logo-mini"><b>A</b>LT</span>
           {/* logo for regular state and mobile devices */}
           <span className="logo-lg"><b>Admin</b>LTE</span>
-        </a>
+        </Link>
         {/* Header Navbar: style can be found in header.less */}
         <nav className="navbar navbar-static-top">
           {/* Sidebar toggle button*/}
@@ -214,10 +216,11 @@ function TopBar(props) {
                 </ul>
               </li>
               {/* User Account: style can be found in dropdown.less */}
+              
               <li className="dropdown user user-menu">
                 <a href="#" className="dropdown-toggle" data-toggle="dropdown">
-                  <img src="../../admin/dist/img/user2-160x160.jpg" className="user-image" alt="User Image" />
-                  <span className="hidden-xs">Alexander Pierce</span>
+                  <img src={localUserParse.avatar} className="user-image" alt="User Image" />
+                  <span className="hidden-xs">{localUserParse.name}</span>
                 </a>
                 <ul className="dropdown-menu">
                   {/* User image */}
@@ -263,7 +266,6 @@ function TopBar(props) {
         </nav>
       </header>
 
-        </div>
     )
 }
 
