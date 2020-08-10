@@ -5,10 +5,12 @@ import axios from 'axios';
 import { useParams, useHistory } from 'react-router-dom';
 import Swal from 'sweetalert2'
 import apiRequest from '../../../../api/cateApi';
+import { Editor } from '@tinymce/tinymce-react';
 
 function EditCategory(props) {
     const redColor = {color:'red'}
     const [valueInput,setValueInput] = useState({});
+    const [motaChiTiet,setmotaChiTiet] = useState('');
     const { register, handleSubmit, watch, errors } = useForm();
     const history = useHistory();
     
@@ -28,6 +30,7 @@ function EditCategory(props) {
           try{
             const {data} = await apiRequest.getCate(id)
             setValueInput(data);
+            setmotaChiTiet(data.information);
           }catch(error){
             console.log(error);
           }
@@ -35,10 +38,17 @@ function EditCategory(props) {
         getListCate()
       }, []);
 
+      const onInfoChange = (content, editor) => {
+        setmotaChiTiet(content.level.content);
+      }
+
+
+
     // const onSubmit = data => console.log(data);
     function onSubmit (event){
          let data = valueInput;
          data.image =  document.querySelector('#show_img').src
+         data.information = motaChiTiet;
          console.log(data);
          apiRequest.updateCate(id,data)
           .then(function (response) {
@@ -71,6 +81,8 @@ function EditCategory(props) {
             fileReader.readAsDataURL(fileToLoad);
         }
     }
+
+
     return (
         <div>
             <div className="col-md-7">
@@ -98,16 +110,21 @@ function EditCategory(props) {
                        
                          </div>
                     </div>
-                    <div className="form-group">
+                    <div style={{display:'none'}} className="form-group">
                         <label htmlFor="inputPassword3" className="col-sm-2 control-label">Cấp bậc</label>
                         <div className="col-sm-10">
                           <select classname="form-control" onChange={onHandleChange} name="cap_cate">
+                          <option value='' > Chọn bậc</option>
                             <option value={1}   selected={valueInput.cap_cate == 1 ? 'true' : ''} >Bậc 1</option>
                             <option value={2}  selected={valueInput.cap_cate == 2 ? 'true' : ''} >Bậc 2</option>
                           </select>
-                        {errors.cap_cate && <p style={redColor}>Chưa chọn danh mục</p>}
                          </div>
                     </div>
+
+
+                         
+                    <label htmlFor="inputPassword3" className="col-sm-2 control-label">Mô tả chi tiết</label>
+                      <Editor value={motaChiTiet}  onChange={onInfoChange} />
                
                 </div>
                 {/* /.box-body */}

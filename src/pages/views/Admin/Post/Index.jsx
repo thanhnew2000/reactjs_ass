@@ -12,20 +12,19 @@ function PostAdmin(props) {
     const [listPost, setlistPost] = useState([]);
     const [listPost2, setlistPost2] = useState([]);
 
-    useEffect(() => {
-      async function getList(){
-        try{
-          const {data} = await apiRequest.getAllPost()
-          setlistPost(data);
-          setlistPost2(data);
-          console.log(data)
-        }catch(error){
+    const getList = () => {
+        apiRequest.getAllPost()
+        .then(function (response) {
+          setlistPost(response.data);
+          setlistPost2(response.data);
+        })
+        .catch(function (error) {
           console.log(error);
-        }
-      }
-      getList()
-    }, []);
+        });
+    };
+    useEffect(getList, []);
 
+    
       function colorStatus($number){
         if($number == 1){
           return 'red'
@@ -93,7 +92,7 @@ function PostAdmin(props) {
           apiRequest.removePost(id)
             .then(function (response) {
               console.log(response);
-              window.location.reload();
+              getList();
             })
             .catch(function (error) {
               console.log(error);

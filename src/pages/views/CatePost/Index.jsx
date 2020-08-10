@@ -75,7 +75,7 @@ function CatePostClient(props) {
                                 <img src={el.image}  width="200px" height="120px"/>
                             </div>
                             <div className="col-md-8">
-                               <h4><Link to={'../../post/'+el.id}>{el.title}</Link></h4>
+                               <h4><Link to={'../../post/'+el.id+'/'+el.id_cate}>{el.title}</Link></h4>
                                <p>{(el.short_description).slice(0,250)+'...'}</p>
                             </div>
                             <br/>
@@ -103,7 +103,7 @@ function CatePostClient(props) {
                             <img src={el.image} width="100px" height="70px"/>
                         </div>
                         <div className="col-md-8">
-                            <p><Link to={'../../post/'+el.id}>{el.title}</Link> </p>
+                            <p><Link to={'../../post/'+el.id+'/'+el.id_cate}>{el.title}</Link> </p>
                         </div>
 
                         <br/>

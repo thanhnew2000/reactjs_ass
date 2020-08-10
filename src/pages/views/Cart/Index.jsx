@@ -2,10 +2,11 @@ import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import { Link, useHistory } from 'react-router-dom';
 import Swal from 'sweetalert2'
+import functionAddCart from '../Cart/functionAddCart'
 
 function Cart(props) {
     const cartJson = localStorage.getItem('cart');
-    const [arrayCart, setarrayCart] = useState(cartJson.length <= 0 ? [] : JSON.parse(cartJson))
+    const [arrayCart, setarrayCart] = useState(cartJson == null ? [] : JSON.parse(cartJson))
     let total_weight = arrayCart.reduce((total, value ,index) => {
         return total += (value.price * value.number)
     }, 0)
@@ -24,7 +25,7 @@ function Cart(props) {
         setTotalPrice(total_weight);
          var changeArraytoJson = JSON.stringify(arrayAfter)
          localStorage.setItem('cart',changeArraytoJson)
-
+         functionAddCart.countCart()
     }
 
     function addNumberCart(id){
@@ -41,6 +42,10 @@ function Cart(props) {
          setTotalPrice(total_weight);
          var changeArraytoJson = JSON.stringify(newArray)
          localStorage.setItem('cart',changeArraytoJson)
+
+         
+         functionAddCart.countCart()
+
     }
     const minusNumberCart = (id) => { 
         var newArray =[...arrayCart];
@@ -56,7 +61,15 @@ function Cart(props) {
          setTotalPrice(total_weight);
          var changeArraytoJson = JSON.stringify(newArray)
          localStorage.setItem('cart',changeArraytoJson)
+
+         functionAddCart.countCart()
+
     }
+
+    
+    function formatMoney(price) {
+        return functionAddCart.formatMoney(price)
+      }
 
     return (
         <div>
@@ -92,7 +105,7 @@ function Cart(props) {
                             <p>Web ID: {el.id}</p>
                             </td>
                             <td className="cart_price">
-                            <p>{el.price}</p>
+                            <p>{formatMoney(el.price)}</p>
                             </td>
                             <td className="cart_quantity">
                             <div className="cart_quantity_button">
@@ -104,7 +117,7 @@ function Cart(props) {
                             </div>
                             </td>
                             <td className="cart_total">
-                            <p className="cart_total_price">{el.price*el.number}</p>
+                            <p className="cart_total_price">{formatMoney(el.price*el.number)}</p>
                             </td>
                             <td className="cart_delete">
                             <a onClick={()=>deleteCart(el.id)} className="cart_quantity_delete" href><i className="fa fa-times" />
@@ -119,9 +132,9 @@ function Cart(props) {
                     </table>
                     </div>
                     <div className="row">
-                            <div className="col-md-10"></div>
-                            <div className="col-md-2">
-                                <h4>Tổng tiền : {totalPrice}</h4>
+                            <div className="col-md-9"></div>
+                            <div className="col-md-3">
+                                <h4>Tổng tiền : {formatMoney(totalPrice)}</h4>
                                 <Link to={'/gio-hang/thanh-toan'} className="btn btn-primary">Thanh toan</Link>
                                 </div>
                     </div>

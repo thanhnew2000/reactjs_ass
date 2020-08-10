@@ -1,8 +1,9 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Link, useParams } from 'react-router-dom';
 import Pagination from './Pagination';
 import functionAddCart from '../Cart/functionAddCart'
 import Swal from 'sweetalert2'
+import '../../../../src/assets/client/css/menudrop.scss'
 
 const Categorie = (props) => {
   let {id} = useParams();
@@ -10,7 +11,8 @@ const Categorie = (props) => {
   const  listProduct_cate = products2.filter(product => product.id_category == id);
   const {danhsach} = props;
   const danhsachHavefillter =danhsach.filter(el => el.id !== 1);
-  const danhsachHavefillter_detail = danhsachHavefillter.find(product => product.id == id);
+  const danhsachHavefillter_detail = danhsachHavefillter.filter(el => el.id == id);
+  // console.log(danhsachHavefillter_detail)
   const styleContanerImage={
       position: 'relative',
       'text-align': 'center',
@@ -23,20 +25,38 @@ const Categorie = (props) => {
     transform: 'translate(-50%, -50%)',
 }
 
+useEffect(functionAddCart.countCart,[])
 
 function addCart(pro){
-  const arrayCart2 = functionAddCart.addCart(pro)
-   var arrayCartJson = JSON.stringify(arrayCart2);
-   localStorage.setItem('cart',arrayCartJson);
-
-   Swal.fire({
-     title: 'Thêm giỏ hàng thành công ',
-     icon: 'success',
-     showCancelButton: false,
-     times:1000,
-   })
+  functionAddCart.addCart(pro)
+}
+function formatMoney(price) {
+  return functionAddCart.formatMoney(price)
 }
 
+function giamGia(old_price,price){
+  var phantram = (Math.round(((old_price - price)/old_price)*100))+'%';
+  return phantram;
+}
+// function addCart(pro){
+//   const arrayCart2 = functionAddCart.addCart(pro)
+//    var arrayCartJson = JSON.stringify(arrayCart2);
+//    localStorage.setItem('cart',arrayCartJson);
+
+//    Swal.fire({
+//      title: 'Thêm giỏ hàng thành công ',
+//      icon: 'success',
+//      showCancelButton: false,
+//      times:1000,
+//    })
+// }
+
+// function formatMoney(price) {
+//   return new Intl.NumberFormat("vi-VN", {
+//     style: "currency",
+//     currency: "VND",
+//   }).format(price);
+// }
 
 // phân trang
 const [currentProduct, setCurrentProduct] = useState(1);
@@ -50,9 +70,14 @@ const paginate = productNumber => (setCurrentProduct(productNumber));
        <div>
         <section id="advertisement">
           <div className="container" style={styleContanerImage} >
-           <p style={styleContanerChild} >Giay Vans</p>
-            <img height="400" src="https://images.solecollector.com/complex/images/c_fill,dpr_2.0,f_auto,fl_lossy,q_auto,w_680/su4e8szwoz0nstswdigk/nike-hyperadapt-1-triple-white-release-date-ah9389-102-dark-main" alt="" />
-          </div>
+            {danhsachHavefillter_detail.map((el,index) =>(
+              <div key={index}>
+              <h5 style={styleContanerChild} >{el.name_category}</h5>
+                 <img height="400" src={el.image} alt="" />
+              </div>
+            ))}
+         
+            </div>
         </section>
         <section>
           <div className="container">
@@ -105,8 +130,17 @@ const paginate = productNumber => (setCurrentProduct(productNumber));
                     <div className="product-image-wrapper">
                       <div className="single-products">
                         <div className="productinfo text-center">
-                          <img src={pro.feature_image} alt="" />
-                         <h2>{pro.price}</h2>
+
+                        <p className="containerImage">
+                          <img src={pro.feature_image} alt="" height='250px' />
+                          <p  className="top-left" style={{color:'white',fontSize:'17px',display:pro.old_price == 0 ? 'none'  : ''}}>
+                            Sale {giamGia(pro.old_price,pro.price)}</p>
+                         </p>
+                         <span align="center" style={{color:'#c8c8c8',textDecoration: 'line-through',display:pro.old_price == 0 ? 'none'  : ''}}>
+                           {formatMoney(pro.old_price)}
+                         </span> 
+                          <span style={{fontSize:'20px',color:'#FE980F',fontWeight:'BOLD'}}> {formatMoney(pro.price)}</span>
+
                           <p>{pro.name_product}</p>
                           {/* <a href="#" className="btn btn-default add-to-cart"><i className="fa fa-shopping-cart" />Add to cart</a> */}
                         </div>
@@ -114,13 +148,14 @@ const paginate = productNumber => (setCurrentProduct(productNumber));
                           <div className="overlay-content">
                             <h2>{pro.name_product}</h2>
                             <p>{pro.short_description}</p>
-                            <a  onClick={() => addCart(pro)} className="btn btn-default add-to-cart"><i className="fa fa-shopping-cart" />Thêm giỏ hàng</a>
+                            <a  style={{display: pro.quantity <= 0 ? 'none' : ''}}  onClick={() => addCart(pro)} className="btn btn-default add-to-cart"><i className="fa fa-shopping-cart" />Thêm giỏ hàng</a>
+                            <h5 style={{color:'red', display: pro.quantity <= 0 ? '' : 'none' }}> Hết hàng </h5>
                           </div>
                         </div>
                       </div>
                       <div className="choose">
                         <ul className="nav nav-pills nav-justified">
-                        <li> <Link to={'../san-pham/'+pro.id_category+'/'+pro.id}><i className="fa fa-plus-square" />Xem chi tiết</Link></li>
+                        <li> <Link to={'../san-pham/'+pro.id+'/'+pro.id_category}><i className="fa fa-plus-square" />Xem chi tiết</Link></li>
                           {/* <li><a href="#"><i className="fa fa-plus-square" />Add to compare</a></li> */}
                         </ul>
                       </div>

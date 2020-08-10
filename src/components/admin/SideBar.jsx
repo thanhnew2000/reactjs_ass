@@ -13,34 +13,26 @@ function SideBar(props) {
           {/* Sidebar user panel */}
           <div className="user-panel">
             <div className="pull-left image">
-              <img src={localUserParse.avatar} className="img-circle" alt="User Image" />
+              <img src={localUserParse == null ? '' : localUserParse.avatar} className="img-circle" alt="User Image" />
             </div>
             <div className="pull-left info">
-              <p>{localUserParse.name}</p>
+              <p>{localUserParse == null ? '' : localUserParse.name}</p>
               <a href="#"><i className="fa fa-circle text-success" /> Online</a>
             </div>
           </div>
           {/* search form */}
-          <form action="#" method="get" className="sidebar-form">
-            <div className="input-group">
-              <input type="text" name="q" className="form-control" placeholder="Search..." />
-              <span className="input-group-btn">
-                <button type="submit" name="search" id="search-btn" className="btn btn-flat"><i className="fa fa-search" />
-                </button>
-              </span>
-            </div>
-          </form>
+  
           {/* /.search form */}
           {/* sidebar menu: : style can be found in sidebar.less */}
           <ul className="sidebar-menu" data-widget="tree">
             <li className="header"> Admin</li>
             <li>
-              <a href="pages/widgets.html">
+            <Link to={'../../admin'}>
                 <i className="fa fa-th" /> <span>Dashbord</span>
                 <span className="pull-right-container">
                   <small className="label pull-right bg-green">new</small>
                 </span>
-              </a>
+                </Link>
             </li>
 
             <li>

@@ -9,8 +9,8 @@ const getAllOrderUser = (id) => {
     return http.get("/order/user/"+id);
 };
 
-const createOrder = (id,totalprice,data,) => {
-    return http.post(`/order/`+id+`/${totalprice}`, data);
+const createOrder = (id,totalprice,name,address,phone,data) => {
+    return http.post(`/order/${id}/${totalprice}/${name}/${address}/${phone}`, data);
 };
 const getOne = id => {
     return http.get(`/order/${id}`);
@@ -23,6 +23,9 @@ const updateStatus = (id, data) => {
     return http.put(`/order/${id}`, data);
 };
 
+const remove = id => {
+    return http.delete(`/order/${id}`);
+};
 
 const dashBoardTotal = () => {
     return http.get(`/dashboard/total`);
@@ -31,6 +34,7 @@ export default {
     createOrder,
     getAllOrder,
     getOne,
+    remove,
     getOrderDetails,
     updateStatus,
     getAllOrderUser,

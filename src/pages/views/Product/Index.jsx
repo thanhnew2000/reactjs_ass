@@ -25,7 +25,7 @@ function Product(props) {
       try{
         const {data} = await axios.get("http://localhost:8000/api/product/"+id);
         setOneSanPham(data);
-        // setIdCate(data.id_category);
+        functionAddCart.countCart()
       }catch(error){
         console.log(error);
       }
@@ -50,20 +50,37 @@ function Product(props) {
   let  last3product = sanPhamOfCate.filter((el,index) => index > 2 );
   console.log(sanPhamOfCate)
 
+  function addCart(pro){
+    functionAddCart.addCart(pro)
+  }
   
-function addCart(pro){
-  const arrayCart2 = functionAddCart.addCart(pro)
-   var arrayCartJson = JSON.stringify(arrayCart2);
-   localStorage.setItem('cart',arrayCartJson);
+  function formatMoney(price) {
+    return functionAddCart.formatMoney(price)
+  }
 
-   Swal.fire({
-     title: 'Thêm giỏ hàng thành công ',
-     icon: 'success',
-     showCancelButton: false,
-     times:1000,
-   })
-}
+  function giamGia(old_price,price){
+    var phantram = (Math.round(((old_price - price)/old_price)*100))+'%';
+    return phantram;
+  }
+// function addCart(pro){
+//   const arrayCart2 = functionAddCart.addCart(pro)
+//    var arrayCartJson = JSON.stringify(arrayCart2);
+//    localStorage.setItem('cart',arrayCartJson);
 
+//    Swal.fire({
+//      title: 'Thêm giỏ hàng thành công ',
+//      icon: 'success',
+//      showCancelButton: false,
+//      times:1000,
+//    })
+// }
+
+// function formatMoney(price) {
+//   return new Intl.NumberFormat("vi-VN", {
+//     style: "currency",
+//     currency: "VND",
+//   }).format(price);
+// }
     return (
         <div>
           <section>
@@ -77,33 +94,12 @@ function addCart(pro){
                   <div className="panel panel-default" key={index}>
                     <div className="panel-heading">
                       <h4 className="panel-title">
-                      <Link to={'../danh-muc/'+el.id}>{el.name_category}</Link></h4>
+                      <Link to={'../../danh-muc/'+el.id}>{el.name_category}</Link></h4>
                     </div>
                   </div>
                 ))}
                  
-                </div>{/*/category-products*/}
-                {/* <div className="brands_products">
-                  <h2>Brands</h2>
-                  <div className="brands-name">
-                    <ul className="nav nav-pills nav-stacked">
-                      <li><a href> <span className="pull-right">(50)</span>Acne</a></li>
-                      <li><a href> <span className="pull-right">(56)</span>Grüne Erde</a></li>
-                      <li><a href> <span className="pull-right">(27)</span>Albiro</a></li>
-                      <li><a href> <span className="pull-right">(32)</span>Ronhill</a></li>
-                      <li><a href> <span className="pull-right">(5)</span>Oddmolly</a></li>
-                      <li><a href> <span className="pull-right">(9)</span>Boudestijn</a></li>
-                      <li><a href> <span className="pull-right">(4)</span>Rösch creative culture</a></li>
-                    </ul>
-                  </div>
-                </div> */}
-                {/* <div className="price-range">
-                  <h2>Price Range</h2>
-                  <div className="well">
-                    <input type="text" className="span2" defaultValue data-slider-min={0} data-slider-max={600} data-slider-step={5} data-slider-value="[250,450]" id="sl2" /><br />
-                    <b>$ 0</b> <b className="pull-right">$ 600</b>
-                  </div>
-                </div> */}
+                </div>
                 <div className="shipping text-center">{/*shipping*/}
                   <img src="../../client/images/home/shipping.jpg" alt="" />
                 </div>{/*/shipping*/}
@@ -113,36 +109,18 @@ function addCart(pro){
               <div className="product-details">{/*product-details*/}
                 <div className="col-sm-5">
                   <div className="view-product">
+                 
+
+                    <p className="containerImage">
                     <img src={oneSanPham.feature_image} alt="" />
+                    <p  className="top-left" style={{color:'white',fontSize:'17px',display:oneSanPham.old_price == 0 ? 'none'  : ''}}>
+                            Sale {giamGia(oneSanPham.old_price,oneSanPham.price)}</p>
+                  </p>
+
+
                     <h3>ZOOM</h3>
                   </div>
-                  <div id="similar-product" className="carousel slide" data-ride="carousel">
-                    {/* Wrapper for slides */}
-                    {/* <div className="carousel-inner">
-                      <div className="item active">
-                        <a href><img src="../client/images/product-details/similar1.jpg" alt="" /></a>
-                        <a href><img src="../client/images/product-details/similar2.jpg" alt="" /></a>
-                        <a href><img src="../client/images/product-details/similar3.jpg" alt="" /></a>
-                      </div>
-                      <div className="item">
-                        <a href><img src="../client/images/product-details/similar1.jpg" alt="" /></a>
-                        <a href><img src="../client/images/product-details/similar2.jpg" alt="" /></a>
-                        <a href><img src="../client/images/product-details/similar3.jpg" alt="" /></a>
-                      </div>
-                      <div className="item">
-                        <a href><img src="../client/images/product-details/similar1.jpg" alt="" /></a>
-                        <a href><img src="../client/images/product-details/similar2.jpg" alt="" /></a>
-                        <a href><img src="../client/images/product-details/similar3.jpg" alt="" /></a>
-                      </div>
-                    </div> */}
-                    {/* Controls */}
-                    <a className="left item-control" href="#similar-product" data-slide="prev">
-                      <i className="fa fa-angle-left" />
-                    </a>
-                    <a className="right item-control" href="#similar-product" data-slide="next">
-                      <i className="fa fa-angle-right" />
-                    </a>
-                  </div>
+            
                 </div>
                 <div className="col-sm-7">
                   <div className="product-information">{/*/product-information*/}
@@ -150,19 +128,18 @@ function addCart(pro){
                     <h2>{oneSanPham.name_product}</h2>
                         <p>Mã sản phẩm: {oneSanPham.id}</p>
                         <p>Mô tả: {oneSanPham.short_description}</p>
+                        <p>Số lượng còn :{oneSanPham.quantity} </p>
                       <span>
-                      <span>{oneSanPham.price}đ</span>
-                      {/* <label>Quantity:</label> */}
-                      {/* <input type="text" defaultValue={3} /> */}
                     
+                      <span>{formatMoney(oneSanPham.price)}</span>
+                      <p style={{color:'#c8c8c8',textDecoration: 'line-through',fontSize:'16px',display:oneSanPham.old_price == 0 ? 'none'  : ''}}>
+                           {formatMoney(oneSanPham.old_price)}
+                      </p> 
+                       <h4 style={{color:'red'}}>{oneSanPham.quantity <= 0 ? 'Hết hàng' : ''}</h4>
                     </span>
                     <p>
-                    <a  onClick={() => addCart(oneSanPham)} className="btn btn-default add-to-cart"><i className="fa fa-shopping-cart" />Thêm giỏ hàng</a>
+                    <a style={{display: oneSanPham.quantity <= 0 ? 'none' : '' }} onClick={() => addCart(oneSanPham)} className="btn btn-default add-to-cart"><i className="fa fa-shopping-cart" />Thêm giỏ hàng</a>
                       </p>
-                    {/* <p><b>Availability:</b> In Stock</p>
-                    <p><b>Condition:</b> New</p>
-                    <p><b>Brand:</b> E-SHOPPER</p>
-                    <a href><img src="../client/images/product-details/share.png" className="share img-responsive" alt="" /></a> */}
                   </div>{/*/product-information*/}
                 </div>
               </div>{/*/product-details*/}
@@ -211,9 +188,22 @@ function addCart(pro){
                         <div className="product-image-wrapper">
                           <div className="single-products">
                             <div className="productinfo text-center">
-                              <img src={el.feature_image} alt="" />
-                              <h2>{el.price}</h2>
+
+                            
+                        <p className="containerImage">
+                          <img src={el.feature_image} alt="" height='250px' />
+                          <p  className="top-left" style={{color:'white',fontSize:'17px',display:el.old_price == 0 ? 'none'  : ''}}>
+                            Sale {giamGia(el.old_price,el.price)}</p>
+                         </p>
+                         <span align="center" style={{color:'#c8c8c8',textDecoration: 'line-through',display:el.old_price == 0 ? 'none'  : ''}}>
+                           {formatMoney(el.old_price)}
+                         </span> 
+                          <span style={{fontSize:'20px',color:'#FE980F',fontWeight:'BOLD'}}> {formatMoney(el.price)}</span>
+
+
+
                               <p>{el.name_product}</p>
+
                               <button type="button" className="btn btn-default add-to-cart"><i className="fa fa-shopping-cart" />Add to cart</button>
                             </div>
                           </div>
@@ -228,8 +218,20 @@ function addCart(pro){
                           <div className="product-image-wrapper">
                             <div className="single-products">
                               <div className="productinfo text-center">
-                                <img src={el.feature_image} alt="" />
-                                  <h2>{el.price}</h2>
+                               
+
+
+                              <p className="containerImage">
+                                <img src={el.feature_image} alt="" height='250px' />
+                                <p  className="top-left" style={{color:'white',fontSize:'17px',display:el.old_price == 0 ? 'none'  : ''}}>
+                                  Sale {giamGia(el.old_price,el.price)}</p>
+                              </p>
+                                <span align="center" style={{color:'#c8c8c8',textDecoration: 'line-through',display:el.old_price == 0 ? 'none'  : ''}}>
+                                  {formatMoney(el.old_price)}
+                                </span> 
+                                <span style={{fontSize:'20px',color:'#FE980F',fontWeight:'BOLD'}}> {formatMoney(el.price)}</span>
+
+
                                   <p>{el.name_product}</p>
                                 <button type="button" className="btn btn-default add-to-cart"><i className="fa fa-shopping-cart" />Add to cart</button>
                               </div>

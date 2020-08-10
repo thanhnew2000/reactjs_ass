@@ -5,10 +5,11 @@ import '../../assets/client/css/animate.scss';
 import '../../assets/client/css/main.scss';
 
 export default ({ children ,danhsach}) => {
+  
     return (
         <div className="layOutClient">
         <div className="user-page">
-            <Header danhsach={danhsach}/>
+            <Header danhsach={danhsach} />
             {/* <div className="content"> */}
                 {children}
             {/* </div> */}

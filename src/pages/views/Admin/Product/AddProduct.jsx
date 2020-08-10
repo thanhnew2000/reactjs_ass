@@ -15,13 +15,13 @@ function AddProduct({danhsach}) {
     const { register, handleSubmit, watch, errors } = useForm();
     const history = useHistory();
 
-    const onHandleChange = (e) => {
-        const {name,value} = e.target
-        setValueInput({
-            ...valueInput,
-            [name]:value
-        })
-    }
+    // const onHandleChange = (e) => {
+    //     const {name,value} = e.target
+    //     setValueInput({
+    //         ...valueInput,
+    //         [name]:value
+    //     })
+    // }
 
 
     const onInfoChange = (content, editor) => {
@@ -29,61 +29,61 @@ function AddProduct({danhsach}) {
       }
 
     function onSubmit (data){
-        let file = data.feature_image[0];
-        let storogeUrl=firebase.storage().ref(`images/${file.name}`);
-        let uploadTask = storogeUrl.put(file)
-        uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED);
+        // let file = data.feature_image[0];
+        // let storogeUrl=firebase.storage().ref(`images/${file.name}`);
+        // let uploadTask = storogeUrl.put(file)
+        // uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED);
 
 
-        firebase.storage().ref().child(`images/${file.name}`).getDownloadURL().then((url)=>{
-            data.feature_image = url;
-            data.information = motaChiTiet;
-            apiRequest.create(data)
-            .then(function (response) {
-                Swal.fire({
-                    title: 'Thêm mới thành công ',
-                    icon: 'success',
-                    showCancelButton: false,
-                }).then(function (response) {
-                    history.push('../../admin/products');
-                })
-            })
-        })
+        // firebase.storage().ref().child(`images/${file.name}`).getDownloadURL().then((url)=>{
+        //     data.feature_image = url;
+        //     data.information = motaChiTiet;
+        //     apiRequest.create(data)
+        //     .then(function (response) {
+        //         Swal.fire({
+        //             title: 'Thêm mới thành công ',
+        //             icon: 'success',
+        //             showCancelButton: false,
+        //         }).then(function (response) {
+        //             history.push('../../admin/products');
+        //         })
+        //     })
+        // })
 
-        // //  var target = event.target;
-        // data.feature_image =  document.querySelector('#show_img').src;
-        // data.information = motaChiTiet;
-        // apiRequest.create(data)
-        //   .then(function (response) {
-        //     Swal.fire({
-        //         title: 'Thêm mới thành công ',
-        //         icon: 'success',
-        //         showCancelButton: false,
-        //       }).then(function (response) {
-        //          history.push('../../admin/products');
-        //       })
-        //   })
-        //   .catch(function (error) {
-        //     console.log(error);
-        //   })
+        //  var target = event.target;
+        data.feature_image =  document.querySelector('#show_img').src;
+        data.information = motaChiTiet;
+        apiRequest.create(data)
+          .then(function (response) {
+            Swal.fire({
+                title: 'Thêm mới thành công ',
+                icon: 'success',
+                showCancelButton: false,
+              }).then(function (response) {
+                 history.push('../../admin/products');
+              })
+          })
+          .catch(function (error) {
+            console.log(error);
+          })
     }
 
     
     const loadImageFileAsURL = (e) => {
-        console.log(e)
-                document.querySelector('#show_img').src= e.target.value
+        // console.log(e)
+        //         document.querySelector('#show_img').src= e.target.value
 
-        // var file = e.target
-        // var fileSelected = file.files;
-        // if(fileSelected.length > 0 ){
-        //     var fileToLoad = fileSelected[0];
-        //     var fileReader = new FileReader();
-        //     fileReader.onload= function(fileloadEvent){
-        //         var srcData= fileloadEvent.target.result;
-        //         document.querySelector('#show_img').src=srcData
-        //     }
-        //     fileReader.readAsDataURL(fileToLoad);
-        // }
+        var file = e.target
+        var fileSelected = file.files;
+        if(fileSelected.length > 0 ){
+            var fileToLoad = fileSelected[0];
+            var fileReader = new FileReader();
+            fileReader.onload= function(fileloadEvent){
+                var srcData= fileloadEvent.target.result;
+                document.querySelector('#show_img').src=srcData
+            }
+            fileReader.readAsDataURL(fileToLoad);
+        }
     }
     return (
         <div>
@@ -100,7 +100,7 @@ function AddProduct({danhsach}) {
                     <div className="form-group">
                     <label htmlFor="inputEmail3" className="col-sm-2 control-label">Tên sản phẩm</label>
                     <div className="col-sm-10">
-                        <input type="text" className="form-control" ref={register({ required: true, minLength:5 , pattern:/^[^\s].*/   })} name="name_product"  onChange={onHandleChange} placeholder="Tên sản phẩm" />
+                        <input type="text" className="form-control" ref={register({ required: true, minLength:5 , pattern:/^[^\s].*/   })} name="name_product"  placeholder="Tên sản phẩm" />
                         {errors.name_product && <p style={{color:'red'}}>Tên không được để trống và phải trên 5 kí tự</p>}
                     </div>
                     </div>
@@ -118,15 +118,23 @@ function AddProduct({danhsach}) {
                     <div className="form-group">
                         <label htmlFor="inputPassword3" className="col-sm-2 control-label">Số lượng</label>
                         <div className="col-sm-10">
-                        <input type="number" className="form-control" ref={register({ required: true })} name="quantity" onChange={onHandleChange} placeholder="Quantity" />
+                        <input type="number" className="form-control" ref={register({ required: true })} name="quantity" placeholder="Quantity" />
                         {errors.quantity && <p style={{color:'red'}}>Chưa nhập số lượng</p>}
                          </div>
                     </div>
-                    
+
+                    <div className="form-group">
+                        <label htmlFor="inputPassword3" className="col-sm-2 control-label">Giá cũ</label>
+                        <div className="col-sm-10">
+                        <input type="number" className="form-control" ref={register({ required: true, mix:0 })} name="old_price" placeholder="Giá cũ" />
+                        {errors.price && <p style={{color:'red'}}>Bạn chưa nhập giá</p>}
+                         </div>
+                    </div>
+
                     <div className="form-group">
                         <label htmlFor="inputPassword3" className="col-sm-2 control-label">Price</label>
                         <div className="col-sm-10">
-                        <input type="number" className="form-control" ref={register({ required: true, mix:0 })} name="price" onChange={onHandleChange} placeholder="Giá" />
+                        <input type="number" className="form-control" ref={register({ required: true, mix:0 })} name="price" placeholder="Giá" />
                         {errors.price && <p style={{color:'red'}}>Bạn chưa nhập giá</p>}
                          </div>
                     </div>
@@ -135,7 +143,7 @@ function AddProduct({danhsach}) {
                     <div className="form-group">
                         <label htmlFor="inputPassword3" className="col-sm-2 control-label">Mô tả ngắn:</label>
                         <div className="col-sm-10">
-                        <input type="text" className="form-control" ref={register({ required: true })} name="short_description" onChange={onHandleChange} placeholder="Mô tả ngắn" />
+                        <input type="text" className="form-control" ref={register({ required: true })} name="short_description" placeholder="Mô tả ngắn" />
                         {errors.short_description && <p style={{color:'red'}}>Chưa nhập thông tin</p>}
                          </div>
                     </div>
@@ -144,7 +152,7 @@ function AddProduct({danhsach}) {
                     <div className="form-group">
                         <label htmlFor="inputPassword3" className="col-sm-2 control-label">Danh mục</label>
                         <div className="col-sm-10">
-                          <select className="form-control" onChange={onHandleChange} ref={register({ required: true })}  name="id_category" >
+                          <select className="form-control" ref={register({ required: true })}  name="id_category" >
                             {danhsach.map(el => (
                                  <option value={el.id}>{el.name_category} </option>
                             ))}

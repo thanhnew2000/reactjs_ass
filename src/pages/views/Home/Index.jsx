@@ -3,60 +3,37 @@ import { Link } from 'react-router-dom';
 import apiRequest from '../../../api/productApi';
 import Swal from 'sweetalert2'
 import functionAddCart from '../Cart/functionAddCart'
+import '../../../../src/assets/client/css/menudrop.scss'
+
 const Home = (props) => {
-  // const getStorge = localStorage.getItem('cart');
-  // function ganGiaTriKhoiTaoarrayCart(getStorge){
-  //   if(getStorge == null){
-  //     return [];
-  //   }else{
-  //     let getStorgeParse = JSON.parse(getStorge);
-  //     return getStorgeParse;
+
+  // function countCart(){
+  //   var localCart = localStorage.getItem('cart');
+  //   var localCartParse = JSON.parse(localCart);
+  //   if(localCart !== null){
+  //     document.querySelector('.borderCart').innerHTML =localCartParse.length
   //   }
   // }
-  // const arrayCart = ganGiaTriKhoiTaoarrayCart(getStorge);
 
   function addCart(pro){
-     const arrayCart2 = functionAddCart.addCart(pro)
-      var arrayCartJson = JSON.stringify(arrayCart2);
-      localStorage.setItem('cart',arrayCartJson);
-
-      Swal.fire({
-        title: 'Thêm giỏ hàng thành công ',
-        icon: 'success',
-        showCancelButton: false,
-        times:1000,
-      })
+    functionAddCart.addCart(pro)
   }
-  // function addCart(pro){
-  //     var id = pro.id;
-  //     var cartStorage = localStorage.getItem('cart');
-  //     var cartStorageParse =JSON.parse(cartStorage);
-  //     if(cartStorage !== null){
-  //     const findId = cartStorageParse.find(el => el.id == id);
-  //     if(findId == undefined){
-  //       arrayCart.push({'id':id,'number': 1,'name_product:':pro.name_product,'price':pro.price,'feature_image':pro.feature_image});
-  //     }else {
-  //            cartStorageParse.map((value,index) => {
-  //               if(value.id == id){
-  //                 arrayCart[index].number = value.number + 1 ;
-  //               }
-  //            });
-  //     }
-  //   }
-  //   else if(cartStorage == null){
-  //     arrayCart.push({'id':id,'number': 1,'name_product:':pro.name_product,'price':pro.price,'feature_image':pro.feature_image});
-  //   }
-  //     var arrayCartJson = JSON.stringify(arrayCart);
-  //     localStorage.setItem('cart',arrayCartJson);
 
+  // function addCart(pro){
+  //    const arrayCart2 = functionAddCart.addCart(pro)
+  //     var arrayCartJson = JSON.stringify(arrayCart2);
+  //     localStorage.setItem('cart',arrayCartJson);
+  //     countCart();
   //     Swal.fire({
   //       title: 'Thêm giỏ hàng thành công ',
   //       icon: 'success',
   //       showCancelButton: false,
   //       times:1000,
   //     })
-
   // }
+
+  
+ 
 
   const {products} = props;
   var indexProducts = products.filter((el,index) => index <= 8);
@@ -78,6 +55,7 @@ const Home = (props) => {
         setNikePro(data.nikes)
         setVansPro(data.vans)
         setDaNamPro(data.giayda)
+        functionAddCart.countCart()
         // setValueInput(data);
       }catch(error){
         console.log(error);
@@ -86,6 +64,13 @@ const Home = (props) => {
     get4Productfor5cates()
   }, []);
 
+  function formatMoney(price) {
+    return functionAddCart.formatMoney(price)
+  }
+  function giamGia(old_price,price){
+    var phantram = (Math.round(((old_price - price)/old_price)*100))+'%';
+    return phantram;
+  }
 
     return (
       <div>
@@ -159,16 +144,27 @@ const Home = (props) => {
                     <div className="product-image-wrapper">
                       <div className="single-products">
                         <div className="productinfo text-center">
-                          <img src={pro.feature_image} alt="" />
-                        <h2>{pro.price}</h2>
-                          <p>{pro.name_product}</p>
-                          {/* <a href="#" className="btn btn-default add-to-cart"><i className="fa fa-shopping-cart" />Thêm giỏ hàng</a> */}
+
+
+                        <p className="containerImage">
+                          <img src={pro.feature_image} alt="" height='250px' />
+                          <p  className="top-left" style={{color:'white',fontSize:'17px',display:pro.old_price == 0 ? 'none'  : ''}}>
+                            Sale {giamGia(pro.old_price,pro.price)}</p>
+                         </p>
+                         <span align="center" style={{color:'#c8c8c8',textDecoration: 'line-through',display:pro.old_price == 0 ? 'none'  : ''}}>
+                           {formatMoney(pro.old_price)}
+                         </span> 
+                          <span style={{fontSize:'20px',color:'#FE980F',fontWeight:'BOLD'}}> {formatMoney(pro.price)}</span>
+
+
+                        <p>{pro.name_product}</p>
                         </div>
                         <div className="product-overlay">
                           <div className="overlay-content">
                             <h2>{pro.name_product}</h2>
                             <p>{pro.short_description}</p>
-                            <span onClick={() => addCart(pro)} className="btn btn-default add-to-cart"><i className="fa fa-shopping-cart" />Thêm giỏ hàng</span>
+                            <span style={{display: pro.quantity <= 0 ? 'none' : ''}} onClick={() => addCart(pro)} className="btn btn-default add-to-cart"><i className="fa fa-shopping-cart" />Thêm giỏ hàng</span>
+                            <h5 style={{color:'red', display: pro.quantity <= 0 ? '' : 'none' }}> Hết hàng </h5>
                           </div>
                         </div>
                       </div>
@@ -198,8 +194,19 @@ const Home = (props) => {
                         <div className="product-image-wrapper">
                           <div className="single-products">
                             <div className="productinfo text-center">
-                              <img src={el.feature_image}  alt="" />
-                             <h2>{el.price}</h2>
+
+                            <p className="containerImage">
+                          <img src={el.feature_image} alt="" height='150px' />
+                          <p  className="top-left" style={{color:'white',fontSize:'17px',display:el.old_price == 0 ? 'none'  : ''}}>
+                            Sale {giamGia(el.old_price,el.price)}</p>
+                         </p>
+                         <span align="center" style={{color:'#c8c8c8',textDecoration: 'line-through',display:el.old_price == 0 ? 'none'  : ''}}>
+                           {formatMoney(el.old_price)}
+                         </span> 
+                          <span style={{fontSize:'20px',color:'#FE980F',fontWeight:'BOLD'}}> {formatMoney(el.price)}</span>
+
+
+
                               <p>{el.name_product}</p>
                               <span onClick={() => addCart(el)} className="btn btn-default add-to-cart"><i className="fa fa-shopping-cart" />Thêm giỏ hàng</span>
                             </div>
@@ -216,7 +223,7 @@ const Home = (props) => {
                           <div className="single-products">
                             <div className="productinfo text-center">
                             <img src={el.feature_image}  alt="" />
-                             <h2>{el.price}</h2>
+                             <h2>{formatMoney(el.price)}</h2>
                               <p>{el.name_product}</p>
                               <span onClick={() => addCart(el)} className="btn btn-default add-to-cart"><i className="fa fa-shopping-cart" />Thêm giỏ hàng</span>
                             </div>
@@ -234,7 +241,7 @@ const Home = (props) => {
                           <div className="single-products">
                             <div className="productinfo text-center">
                             <img src={el.feature_image}  alt="" />
-                             <h2>{el.price}</h2>
+                             <h2>{formatMoney(el.price)}</h2>
                               <p>{el.name_product}</p>
                               <span onClick={() => addCart(el)} className="btn btn-default add-to-cart"><i className="fa fa-shopping-cart" />Thêm giỏ hàng</span>
                             </div>
@@ -251,7 +258,7 @@ const Home = (props) => {
                           <div className="single-products">
                             <div className="productinfo text-center">
                             <img src={el.feature_image}  alt="" />
-                             <h2>{el.price}</h2>
+                             <h2>{formatMoney(el.price)}</h2>
                               <p>{el.name_product}</p>
                               <span onClick={() => addCart(el)} className="btn btn-default add-to-cart"><i className="fa fa-shopping-cart" />Thêm giỏ hàng</span>
                             </div>
@@ -262,97 +269,6 @@ const Home = (props) => {
                     </div>
                   </div>
                 </div>{/*/category-tab*/}
-
-                {/* <div className="recommended_items">
-                  <h2 className="title text-center">recommended items</h2>
-                  <div id="recommended-item-carousel" className="carousel slide" data-ride="carousel">
-                    <div className="carousel-inner">
-                      <div className="item active">	
-                        <div className="col-sm-4">
-                          <div className="product-image-wrapper">
-                            <div className="single-products">
-                              <div className="productinfo text-center">
-                                <img src="client/images/home/recommend1.jpg" alt="" />
-                                <h2>$56</h2>
-                                <p>Easy Polo Black Edition</p>
-                                <a href="#" className="btn btn-default add-to-cart"><i className="fa fa-shopping-cart" />Add to cart</a>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                        <div className="col-sm-4">
-                          <div className="product-image-wrapper">
-                            <div className="single-products">
-                              <div className="productinfo text-center">
-                                <img src="client/images/home/recommend2.jpg" alt="" />
-                                <h2>$56</h2>
-                                <p>Easy Polo Black Edition</p>
-                                <a href="#" className="btn btn-default add-to-cart"><i className="fa fa-shopping-cart" />Add to cart</a>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                        <div className="col-sm-4">
-                          <div className="product-image-wrapper">
-                            <div className="single-products">
-                              <div className="productinfo text-center">
-                                <img src="client/images/home/recommend3.jpg" alt="" />
-                                <h2>$56</h2>
-                                <p>Easy Polo Black Edition</p>
-                                <a href="#" className="btn btn-default add-to-cart"><i className="fa fa-shopping-cart" />Add to cart</a>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="item">	
-                        <div className="col-sm-4">
-                          <div className="product-image-wrapper">
-                            <div className="single-products">
-                              <div className="productinfo text-center">
-                                <img src="client/images/home/recommend1.jpg" alt="" />
-                                <h2>$56</h2>
-                                <p>Easy Polo Black Edition</p>
-                                <a href="#" className="btn btn-default add-to-cart"><i className="fa fa-shopping-cart" />Add to cart</a>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                        <div className="col-sm-4">
-                          <div className="product-image-wrapper">
-                            <div className="single-products">
-                              <div className="productinfo text-center">
-                                <img src="client/images/home/recommend2.jpg" alt="" />
-                                <h2>$56</h2>
-                                <p>Easy Polo Black Edition</p>
-                                <a href="#" className="btn btn-default add-to-cart"><i className="fa fa-shopping-cart" />Add to cart</a>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                        <div className="col-sm-4">
-                          <div className="product-image-wrapper">
-                            <div className="single-products">
-                              <div className="productinfo text-center">
-                                <img src="client/images/home/recommend3.jpg" alt="" />
-                                <h2>$56</h2>
-                                <p>Easy Polo Black Edition</p>
-                                <a href="#" className="btn btn-default add-to-cart"><i className="fa fa-shopping-cart" />Add to cart</a>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <a className="left recommended-item-control" href="#recommended-item-carousel" data-slide="prev">
-                      <i className="fa fa-angle-left" />
-                    </a>
-                    <a className="right recommended-item-control" href="#recommended-item-carousel" data-slide="next">
-                      <i className="fa fa-angle-right" />
-                    </a>			
-                  </div>
-                </div> */}
-        
               </div>
             </div>
           </div>

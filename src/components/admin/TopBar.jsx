@@ -12,7 +12,7 @@ function TopBar(props) {
           {/* mini logo for sidebar mini 50x50 pixels */}
           <span className="logo-mini"><b>A</b>LT</span>
           {/* logo for regular state and mobile devices */}
-          <span className="logo-lg"><b>Admin</b>LTE</span>
+          <span className="logo-lg"><b>E-</b>SHOPPER</span>
         </Link>
         {/* Header Navbar: style can be found in header.less */}
         <nav className="navbar navbar-static-top">
@@ -26,7 +26,9 @@ function TopBar(props) {
               <li className="dropdown messages-menu">
                 <a href="#" className="dropdown-toggle" data-toggle="dropdown">
                   <i className="fa fa-envelope-o" />
-                  <span className="label label-success">4</span>
+                  <span className="label label-success">
+                    {/* 4 */}
+                  </span>
                 </a>
                 <ul className="dropdown-menu">
                   <li className="header">You have 4 messages</li>
@@ -103,7 +105,9 @@ function TopBar(props) {
               <li className="dropdown notifications-menu">
                 <a href="#" className="dropdown-toggle" data-toggle="dropdown">
                   <i className="fa fa-bell-o" />
-                  <span className="label label-warning">10</span>
+                  <span className="label label-warning">
+                    {/* 10 */}
+                    </span>
                 </a>
                 <ul className="dropdown-menu">
                   <li className="header">You have 10 notifications</li>
@@ -145,7 +149,9 @@ function TopBar(props) {
               <li className="dropdown tasks-menu">
                 <a href="#" className="dropdown-toggle" data-toggle="dropdown">
                   <i className="fa fa-flag-o" />
-                  <span className="label label-danger">9</span>
+                  <span className="label label-danger">
+                    {/* 9 */}
+                    </span>
                 </a>
                 <ul className="dropdown-menu">
                   <li className="header">You have 9 tasks</li>
@@ -219,8 +225,8 @@ function TopBar(props) {
               
               <li className="dropdown user user-menu">
                 <a href="#" className="dropdown-toggle" data-toggle="dropdown">
-                  <img src={localUserParse.avatar} className="user-image" alt="User Image" />
-                  <span className="hidden-xs">{localUserParse.name}</span>
+                  <img src={localUserParse == null ? '' : localUserParse.avatar} className="user-image" alt="User Image" />
+                  <span className="hidden-xs">{localUserParse == null ? '' : localUserParse.name}</span>
                 </a>
                 <ul className="dropdown-menu">
                   {/* User image */}

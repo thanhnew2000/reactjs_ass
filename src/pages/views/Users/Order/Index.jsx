@@ -54,6 +54,13 @@ function OrderClient(props) {
         }
       }
 
+      function formatMoney(price) {
+        return new Intl.NumberFormat("vi-VN", {
+          style: "currency",
+          currency: "VND",
+        }).format(price);
+      }
+  
     return (
         <div>
             <div className="container">
@@ -78,9 +85,9 @@ function OrderClient(props) {
                                 <tr key={index}>
                                     <th scope="row">{el.id}</th>
                                     <td>{el.name} </td>
-                                    <td>{el.phonenumber} </td>
+                                    <td>0{el.phonenumber} </td>
                                     <td style={{color:colorStatus(el.status)}}>{textTrangThai(el.status)}</td>
-                                    <td>{el.total_price}</td>
+                                    <td>{formatMoney(el.total_price)}</td>
                                     <td>
                                         <Link to={'../../thongtincanhan/order/'+el.id}  className="btn btn-light">Chi tiết</Link>
                                     </td>

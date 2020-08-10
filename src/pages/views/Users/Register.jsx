@@ -22,7 +22,7 @@ function Register(props) {
                 icon: 'success',
                 showCancelButton: false,
               }).then(function (response) {
-                 history.push('../../');
+                 history.push('../../dangnhap');
               })
           })
           .catch(function (error) {
@@ -56,10 +56,10 @@ function Register(props) {
                     <form action=""  onSubmit={handleSubmit(onSubmit)}>
                         <input type="text" placeholder="Họ và tên" ref={register({ required: true, minLength:3 })}  name="name" className="form-control"/>
                         {errors.name && <p style={{color:'red'}}>Hãy nhập đầy họ tên ít nhất 3 ký tự</p>}
-                        <input type="text" placeholder="Tài khoản" ref={register({ required: true })}  name="username" className="form-control" />
-                        {errors.username && <p style={{color:'red'}}>Hãy nhập tài khoản</p>}
-                        <input type="password" placeholder="Mật khẩu" ref={register({ required: true })}  name="password" className="form-control" />
-                        {errors.password && <p style={{color:'red'}}>Hãy nhập mật khẩu</p>}
+                        <input type="text" placeholder="Tài khoản" ref={register({ required: true, minLength:5 , pattern:/^[^\s].*/ })}  name="username" className="form-control" />
+                        {errors.username && <p style={{color:'red'}}>Hãy nhập tài khoản ít nhất 5 ký tự </p>}
+                        <input type="password" placeholder="Mật khẩu" ref={register({ required: true, minLength:5, pattern:/^[^\s].*/  })}  name="password" className="form-control" />
+                        {errors.password && <p style={{color:'red'}}>Hãy nhập mật khẩu ít nhất 5 ký tự </p>}
                         <input type="number" placeholder="Số điện thoại" ref={register({ required: true, minLength:5 })} name="phone_number" className="form-control" />
                         {errors.phone_number && <p style={{color:'red'}}>Hãy nhập số điện thoại</p>}
                         {/* <input type="text" placeholder="Avatar"  ref={register} name="avatar" className="form-control" /> */}

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import apiRequest from '../../../../api/orderApi';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
 
 function Dashboard(props) {
   const [total,setTotal] = useState([]);
@@ -34,7 +35,7 @@ function Dashboard(props) {
               <div className="icon">
                 <i className="ion ion-bag" />
               </div>
-              <a href="#" className="small-box-footer">More info <i className="fa fa-arrow-circle-right" /></a>
+              <Link to="../../admin/order" className="small-box-footer">More info <i className="fa fa-arrow-circle-right" /></Link>
             </div>
           </div>
           {/* ./col */}
@@ -48,7 +49,7 @@ function Dashboard(props) {
               <div className="icon">
                 <i className="ion ion-stats-bars" />
               </div>
-              <a href="#" className="small-box-footer">More info <i className="fa fa-arrow-circle-right" /></a>
+              <Link to="../../admin/products" className="small-box-footer">More info <i className="fa fa-arrow-circle-right" /></Link>
             </div>
           </div>
           {/* ./col */}
@@ -62,7 +63,7 @@ function Dashboard(props) {
               <div className="icon">
                 <i className="ion ion-person-add" />
               </div>
-              <a href="#" className="small-box-footer">More info <i className="fa fa-arrow-circle-right" /></a>
+              <Link to="../../admin/tai-khoan" className="small-box-footer">More info <i className="fa fa-arrow-circle-right" /></Link>
             </div>
           </div>
           {/* ./col */}
@@ -76,7 +77,7 @@ function Dashboard(props) {
               <div className="icon">
                 <i className="ion ion-pie-graph" />
               </div>
-              <a href="#" className="small-box-footer">More info <i className="fa fa-arrow-circle-right" /></a>
+              <Link to="../../admin/contacts" className="small-box-footer">More info <i className="fa fa-arrow-circle-right" /></Link>
             </div>
           </div>
           {/* ./col */}

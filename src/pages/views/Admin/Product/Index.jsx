@@ -7,7 +7,28 @@ import apiRequest from '../../../../api/productApi';
 import Pagination from '../../Categories/Pagination';
 import { useForm } from 'react-hook-form';
 
-function deleteProduct(id){
+
+let arrayTest = [];
+
+function ProductAdmin({danhsach,applistProducts}) {
+  const [products,setListProduct] = useState([]);
+  const [products2,setListProduct2] = useState([]);
+  // const [arrayIdRemove,setarrayIdRemove] = useState([]);
+  const [styleShowButton,setstyleShowButton] = useState({display:'none'});
+
+  const getListProduct = () => {
+    apiRequest.getAll()
+    .then(function (response) {
+      setListProduct(response.data);
+      setListProduct2(response.data);
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+};
+  useEffect(getListProduct, []);
+
+  function deleteProduct(id){
     Swal.fire({
         title: 'Bạn có chắc chắc muốn xóa sản phẩm này?',
         icon: 'warning',
@@ -19,7 +40,7 @@ function deleteProduct(id){
           apiRequest.remove(id)
             .then(function (response) {
               console.log(response);
-              window.location.reload();
+              getListProduct();
             })
             .catch(function (error) {
               console.log(error);
@@ -30,25 +51,7 @@ function deleteProduct(id){
         } 
       })
 }
-let arrayTest = [];
 
-function ProductAdmin({danhsach}) {
-  const [products,setListProduct] = useState([]);
-  const [products2,setListProduct2] = useState([]);
-  // const [arrayIdRemove,setarrayIdRemove] = useState([]);
-  const [styleShowButton,setstyleShowButton] = useState({display:'none'});
-  useEffect(() => {
-    async function getListProduct(){
-      try{
-        const {data} = await apiRequest.getAll()
-        setListProduct(data);
-        setListProduct2(data);
-      }catch(error){
-        console.log(error);
-      }
-    }
-    getListProduct()
-  }, []);
 
   function checkBoxChange(e){
     const {value} = e.target;
@@ -119,6 +122,28 @@ function locSort(e){
       })
 }
 
+function filterLocStatus(value){
+  if(value == 1){
+    return products2.filter(el => el.quantity > 10)
+   }else if(value == 2){
+    return products2.filter(el => el.quantity <= 10 && el.quantity !== 0)
+   }else if(value == 3){ 
+    return products2.filter(el => el.quantity <= 0)
+   }
+}
+
+function locStatus(e){
+  const {value} = e.target;
+  console.log(value);
+  const newProducts = filterLocStatus(value)
+  if(value != 'all'){
+    setListProduct(newProducts);
+  }else{
+    setListProduct(products2);
+  }
+}
+
+
 const { register, handleSubmit, watch, errors } = useForm();
 function onSubmitSreach (data){
   apiRequest.searchKey(data.sreach)
@@ -129,6 +154,15 @@ function onSubmitSreach (data){
       console.log(error);
     })
 }
+
+function formatMoney(price) {
+  return new Intl.NumberFormat("vi-VN", {
+    style: "currency",
+    currency: "VND",
+  }).format(price);
+}
+
+
   // phân trang
 const [currentProduct, setCurrentProduct] = useState(1);
 const [productPerpage] = useState(5);
@@ -136,6 +170,28 @@ const indexOflastProduct = currentProduct * productPerpage;
 const indexOfFirstProduct = indexOflastProduct - productPerpage;
 const paginati_Product = products.slice(indexOfFirstProduct,indexOflastProduct);
 const paginate = productNumber => (setCurrentProduct(productNumber));
+
+
+function trangThaiShow(quantity){
+  if(quantity <= 0){
+    return 'Hết hàng';
+  }else if(quantity <= 10){
+    return 'Sắp hết hàng'
+  }else {
+    return 'Còn hàng'
+  }
+}
+
+function colortrangThaiShow(quantity){
+  if(quantity <= 0){
+    return 'red';
+  }else if(quantity <= 10){
+    return 'blue'
+  }else {
+    return 'green'
+  }
+}
+
     return (
         <div>
             <div className="box">
@@ -160,7 +216,7 @@ const paginate = productNumber => (setCurrentProduct(productNumber));
         {/* /.box-header */}
         <div className="box-body">
       <div className="row">
-        <div className="col-md-5"></div>
+        <div className="col-md-2"></div>
         <div className="col-md-1">
          <p>Danh mục :</p>
         </div>
@@ -177,10 +233,20 @@ const paginate = productNumber => (setCurrentProduct(productNumber));
          <p>Thứ tự :</p>
         </div>
         <div className="col-md-2">
-   
           <select onChange={locSort} className="form-control">
                     <option  value='asc'>Tăng dần</option>
                     <option  value='desc'>Giảm dần</option>
+          </select>
+        </div>
+        <div className="col-md-1">
+         <p>Trạng thái :</p>
+        </div>
+        <div className="col-md-2">
+          <select onChange={locStatus} className="form-control">
+                    <option  value='all'>Tất cả</option>
+                    <option  value='1'>Còn hàng</option>
+                    <option  value='2'>Sắp hết hàng</option>
+                    <option  value='3'>Hết hàng</option>
           </select>
         </div>
         
@@ -196,6 +262,8 @@ const paginate = productNumber => (setCurrentProduct(productNumber));
                     <th scope="col">Ảnh</th>
                     <th scope="col">Giá</th>
                     <th scope="col">Số lượng</th>
+                    <th scope="col">Danh mục</th>
+                    <th scope="col">Trạng thái</th>
                     <th scope="col">Chức năng 
                     <Link to={'../admin/products/add'} className="btn btn-success" style={{marginLeft: '10px'}} >Thêm mới</Link>
                     </th>
@@ -206,8 +274,10 @@ const paginate = productNumber => (setCurrentProduct(productNumber));
                             <th scope="row">{el.id}</th>
                             <td>{el.name_product} </td>
                             <td><img src={el.feature_image} width="100" /></td>
-                            <td>{el.price}</td>
+                            <td>{formatMoney(el.price)}</td>
                             <td>{el.quantity}</td>
+                            <td>{el.name_category}</td>
+                            <td style={{color:colortrangThaiShow(el.quantity)}}>{trangThaiShow(el.quantity)}</td>
                             <td>
                                 <Link to={'../admin/products/'+el.id} className="btn btn-primary ">Sửa</Link>
                                 <a  className="btn btn-danger ml-2"  onClick={() => deleteProduct(el.id)} style={{marginLeft: '5px'}}>Xóa</a>

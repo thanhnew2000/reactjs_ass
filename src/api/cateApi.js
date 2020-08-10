@@ -4,8 +4,21 @@ const getAllCate = () => {
     return http.get("cate");
 };
 
+
 const getCate = id => {
     return http.get(`/cate/${id}`);
+};
+
+
+const getallHaveTotalProduct = () => {
+    return http.get(`/cate/getallHaveTotalProduct`);
+};
+const test = () => {
+    return http.get(`/cate/test`);
+};
+
+const getTotalProduct = (id_cate) => {
+    return http.get(`/cate/getTotalProduct/${id_cate}`);
 };
 
 const createCate = data => {
@@ -27,4 +40,7 @@ export default {
     createCate,
     updateCate,
     removeCate,
+    getallHaveTotalProduct,
+    getTotalProduct,
+    test
 };

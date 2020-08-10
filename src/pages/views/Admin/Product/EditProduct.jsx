@@ -111,6 +111,14 @@ function EditProduct({danhsach}) {
                         {errors.quantity && <p style={{color:'red'}}>Bạn chưa nhập số lượng</p>}
                          </div>
                     </div>
+                    
+                    <div className="form-group">
+                        <label htmlFor="inputPassword3" className="col-sm-2 control-label">Giá cũ</label>
+                        <div className="col-sm-10">
+                        <input type="number" className="form-control" ref={register({ required: true })} name="old_price" value={valueInput.old_price} onChange={onHandleChange} placeholder="Giá" />
+                        {errors.price && <p style={{color:'red'}}>Bạn chưa nhập giá</p>}
+                         </div>
+                    </div>
 
                     <div className="form-group">
                         <label htmlFor="inputPassword3" className="col-sm-2 control-label">Price</label>
@@ -119,6 +127,8 @@ function EditProduct({danhsach}) {
                         {errors.price && <p style={{color:'red'}}>Bạn chưa nhập giá</p>}
                          </div>
                     </div>
+
+                
 
                     <div className="form-group">
                         <label htmlFor="inputPassword3" className="col-sm-2 control-label">Mô tả ngắn:</label>

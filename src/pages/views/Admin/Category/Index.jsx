@@ -23,6 +23,7 @@ function CategoryAdmin(props) {
     getList()
   }, []);
 
+
   function deleteCate(id){
     Swal.fire({
         title: 'Bạn có chắc chắc muốn xóa danh mục này?',
@@ -54,6 +55,27 @@ const indexOflastProduct = currentProduct * productPerpage;
 const indexOfFirstProduct = indexOflastProduct - productPerpage;
 const paginati_Danhsach = danhsach.slice(indexOfFirstProduct,indexOflastProduct);
 const paginate = productNumber => (setCurrentProduct(productNumber));
+
+
+const [totalProductCate, settotalProductCate] = useState([]);
+
+useEffect(() => {
+  async function getList(){
+    try{
+      const newArray = [];
+      const {data} = await apiRequest.test()
+      var result = Object.entries(data);
+      result.forEach(([key, value]) => {
+        newArray[key] = value;
+      });
+      settotalProductCate(newArray);
+    }catch(error){
+      console.log(error);
+    }
+  }
+  getList()
+}, []);
+console.log(totalProductCate[10])
     return (
         <div>
             <div className="box">
@@ -68,6 +90,7 @@ const paginate = productNumber => (setCurrentProduct(productNumber));
                     <th scope="col">Tên danh mục</th>
                     <th scope="col">Ảnh</th>
                     <th scope="col">Cấp danh mục</th>
+                    <th scope="col">Số sản phẩm</th>
                     <th scope="col">Chức năng 
                     <Link to={'../admin/danhmuc/add'} className="btn btn-success" style={{marginLeft: '10px'}} >Thêm mới</Link></th>
               </tr>
@@ -77,6 +100,8 @@ const paginate = productNumber => (setCurrentProduct(productNumber));
                             <td>{el.name_category} </td>
                             <td><img src={el.image} width="100" /></td>
                             <td>{el.cap_cate}</td>
+                             <td>{totalProductCate[el.id] == undefined ? 0 : totalProductCate[el.id] }</td>
+
                             <td>
                                 <Link to={'../admin/danhmuc/'+el.id}  className="btn btn-primary " >Sửa</Link>
                                 <a  className="btn btn-danger ml-2"  onClick={() => deleteCate(el.id)} style={{marginLeft: '5px'}}>Xóa</a>

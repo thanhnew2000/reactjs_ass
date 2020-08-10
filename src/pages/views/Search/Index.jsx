@@ -4,6 +4,7 @@ import Pagination from '../Categories/Pagination';
 import functionAddCart from '../Cart/functionAddCart'
 import Swal from 'sweetalert2'
 import apiRequest from '../../../api/productApi';
+import '../../../../src/assets/client/css/menudrop.scss'
 
 
 const Search = (props) => {
@@ -15,7 +16,8 @@ const Search = (props) => {
     async function getProductOfSearch(){
       try{
         const {data} = await apiRequest.searchKey(key)
-        setProductSearch(data)
+        setProductSearch(data);
+        functionAddCart.countCart()
       }catch(error){
         console.log(error);
       }
@@ -23,7 +25,6 @@ const Search = (props) => {
     getProductOfSearch()
   }, []);
 
-console.log(productSearch);
   const styleContanerImage={
       position: 'relative',
       'text-align': 'center',
@@ -36,21 +37,19 @@ console.log(productSearch);
     transform: 'translate(-50%, -50%)',
 }
 
-
 function addCart(pro){
-  const arrayCart2 = functionAddCart.addCart(pro)
-   var arrayCartJson = JSON.stringify(arrayCart2);
-   localStorage.setItem('cart',arrayCartJson);
+  functionAddCart.addCart(pro)
+}
 
-   Swal.fire({
-     title: 'Thêm giỏ hàng thành công ',
-     icon: 'success',
-     showCancelButton: false,
-     times:1000,
-   })
+function formatMoney(price) {
+  return functionAddCart.formatMoney(price)
 }
 
 
+function giamGia(old_price,price){
+  var phantram = (Math.round(((old_price - price)/old_price)*100))+'%';
+  return phantram;
+}
 // phân trang
 const [currentProduct, setCurrentProduct] = useState(1);
 const [productPerpage] = useState(6);
@@ -78,8 +77,22 @@ const paginate = productNumber => (setCurrentProduct(productNumber));
                     <div className="product-image-wrapper">
                       <div className="single-products">
                         <div className="productinfo text-center">
-                          <img src={pro.feature_image} alt="" />
-                         <h2>{pro.price}</h2>
+
+
+
+                        <p className="containerImage">
+                          <img src={pro.feature_image} alt="" height='250px' />
+                          <p  className="top-left" style={{color:'white',fontSize:'17px',display:pro.old_price == 0 ? 'none'  : ''}}>
+                            Sale {giamGia(pro.old_price,pro.price)}</p>
+                         </p>
+                         <span align="center" style={{color:'#c8c8c8',textDecoration: 'line-through',display:pro.old_price == 0 ? 'none'  : ''}}>
+                           {formatMoney(pro.old_price)}
+                         </span> 
+                          <span style={{fontSize:'20px',color:'#FE980F',fontWeight:'BOLD'}}> {formatMoney(pro.price)}</span>
+
+
+
+
                           <p>{pro.name_product}</p>
                           {/* <a href="#" className="btn btn-default add-to-cart"><i className="fa fa-shopping-cart" />Add to cart</a> */}
                         </div>
@@ -93,7 +106,7 @@ const paginate = productNumber => (setCurrentProduct(productNumber));
                       </div>
                       <div className="choose">
                         <ul className="nav nav-pills nav-justified">
-                        <li> <Link to={'../san-pham/'+pro.id}><i className="fa fa-plus-square" />Xem chi tiết</Link></li>
+                        <li> <Link to={'../san-pham/'+pro.id+'/'+pro.id_category}><i className="fa fa-plus-square" />Xem chi tiết</Link></li>
                           {/* <li><a href="#"><i className="fa fa-plus-square" />Add to compare</a></li> */}
                         </ul>
                       </div>

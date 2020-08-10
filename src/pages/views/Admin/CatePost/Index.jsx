@@ -8,19 +8,32 @@ import apiRequest from '../../../../api/postCateApi';
 function CatePost(props) {
   const history = useHistory();
   const [catePost, setcatePost] = useState([]);
-  useEffect(() => {
-    async function getList(){
-      try{
-        const {data} = await apiRequest.getAllPostCate()
-        console.log(data);
-        let newData = data.filter((el,index)=> (el.id != 1))
-        setcatePost(newData);
-      }catch(error){
-        console.log(error);
-      }
-    }
-    getList()
-  }, []);
+
+  const getList = () => {
+    apiRequest.getAllPostCate()
+    .then(function (response) {
+      let newData = response.data.filter((el,index)=> (el.id != 1))
+      setcatePost(newData);
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+};
+useEffect(getList, []);
+
+  // useEffect(() => {
+  //   async function getList(){
+  //     try{
+  //       const {data} = await apiRequest.getAllPostCate()
+  //       console.log(data);
+  //       let newData = data.filter((el,index)=> (el.id != 1))
+  //       setcatePost(newData);
+  //     }catch(error){
+  //       console.log(error);
+  //     }
+  //   }
+  //   getList()
+  // }, []);
 
   function deleteCate(id){
     Swal.fire({
@@ -34,7 +47,8 @@ function CatePost(props) {
             apiRequest.removeCatePost(id)
             .then(function (response) {
               console.log(response);
-              window.location.reload();
+              // window.location.reload();
+              getList();
             })
             .catch(function (error) {
               console.log(error);

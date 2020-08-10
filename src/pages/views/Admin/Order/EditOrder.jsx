@@ -64,7 +64,12 @@ function EditOrder({danhsach}) {
           })
     }
 
-
+    function formatMoney(price) {
+      return new Intl.NumberFormat("vi-VN", {
+        style: "currency",
+        currency: "VND",
+      }).format(price);
+    }
     return (
         <div>
             <div className="col-md-12">
@@ -100,7 +105,7 @@ function EditOrder({danhsach}) {
                         <li className="list-group-item"><b>Thông tin người nhận</b></li>
                         <li className="list-group-item">
                             <p>Tên : {valueInput.name} </p>
-                            <p>Số điện thoại : {valueInput.phonenumber}</p>
+                            <p>Số điện thoại : 0{valueInput.phonenumber}</p>
                             <p>Địa chỉ : {valueInput.address}</p>
                         </li>
                     
@@ -125,7 +130,7 @@ function EditOrder({danhsach}) {
                                 <td>{el.id}</td>
                                 <td>{el.id_product}</td>
                                 <td>{el.name_product}</td>
-                                <td>{el.price_each}</td>
+                                <td>{formatMoney(el.price_each)}</td>
                                 <td><span className="label label-success">{el.quantity_product}</span></td>
                                 </tr>
                                 ))}

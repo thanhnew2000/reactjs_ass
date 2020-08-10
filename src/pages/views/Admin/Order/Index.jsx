@@ -60,6 +60,38 @@ function OrderAdmin(props) {
     }
   }
 
+
+  function deleteOrder(id){
+    Swal.fire({
+        title: 'Bạn có chắc chắc muốn đơn hàng này?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Có',
+        cancelButtonText: 'Không'
+      }).then((result) => {
+        if (result.value) {
+          apiRequest.remove(id)
+            .then(function (response) {
+              console.log(response);
+              window.location.reload();
+            })
+            .catch(function (error) {
+              console.log(error);
+            })
+          Swal.fire(
+            'Đã xóa!',
+          )
+        } 
+      })
+}
+
+function formatMoney(price) {
+  return new Intl.NumberFormat("vi-VN", {
+    style: "currency",
+    currency: "VND",
+  }).format(price);
+}
+
     return (
         <div>
             <div className="box">
@@ -98,12 +130,12 @@ function OrderAdmin(props) {
                             <th scope="row">{el.id}</th>
                             <td>{el.id_user} </td>
                             <td>{el.name} </td>
-                            <td>{el.phonenumber} </td>
+                            <td>0{el.phonenumber} </td>
                             <td style={{color:colorStatus(el.status)}}>{textTrangThai(el.status)}</td>
-                            <td>{el.total_price}</td>
+                            <td>{formatMoney(el.total_price)}</td>
                             <td>
                                 <Link to={'../admin/order/'+el.id}  className="btn btn-primary " >Sửa</Link>
-                                <a  className="btn btn-danger ml-2"  style={{marginLeft: '5px'}}>Xóa</a>
+                                <a   onClick={() => deleteOrder(el.id)}  className="btn btn-danger ml-2"  style={{marginLeft: '5px'}}>Xóa</a>
                             </td>
                         </tr>
                     ))}

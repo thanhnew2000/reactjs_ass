@@ -82,7 +82,7 @@ function AddPost(props) {
                             </div>
                             <div className="form-group">
                                 <label htmlFor="">Short_description</label>
-                                <input type='text' className="form-control" name="short_description" ref={register({ required: true })}  />
+                                <input type='text' className="form-control" name="short_description" ref={register({ required: true, pattern:/^[^\s].*/  })}  />
                                 {errors.short_description && <p style={{color:'red'}}>Bạn chưa mô tả ngắn</p>}
                             </div>
 

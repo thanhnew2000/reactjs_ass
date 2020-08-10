@@ -63,6 +63,13 @@ function DetailOrderClient(props) {
       }
     }
 
+    function formatMoney(price) {
+      return new Intl.NumberFormat("vi-VN", {
+        style: "currency",
+        currency: "VND",
+      }).format(price);
+    }
+
     return (
         <div>
             <div className="container">
@@ -103,7 +110,7 @@ function DetailOrderClient(props) {
                    <div>
                     <ul class="list-group list-group-flush">
                           <li class="list-group-item"><b>Tổng tiền thanh toán</b></li>
-                          <li class="list-group-item">Tổng tiền:  {orders.total_price}.đ  </li>
+                          <li class="list-group-item">Tổng tiền:  {formatMoney(orders.total_price)} </li>
                       </ul>
                    </div>
                     </div>
@@ -125,7 +132,7 @@ function DetailOrderClient(props) {
                                 <td>{el.id}</td>
                                 <td>{el.id_product}</td>
                                 <td>{el.name_product}</td>
-                                <td>{el.price_each}</td>
+                                <td>{formatMoney(el.price_each)}</td>
                                 <td><span className="label label-success">{el.quantity_product}</span></td>
                                 </tr>
                                 ))}

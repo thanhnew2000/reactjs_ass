@@ -72,7 +72,7 @@ const RouteApp = ({products, slide, danhsach}) => {
                                 <Dashboard />
                             </Route>
                             <Route path='/admin/products' exact>
-                              <ProductAdmin products={products} danhsach={danhsach}/>
+                              <ProductAdmin applistProducts={products} danhsach={danhsach}/>
                             </Route>
                             <Route path='/admin/products/add'>
                               <AddProduct danhsach={danhsach}/>
@@ -168,7 +168,7 @@ const RouteApp = ({products, slide, danhsach}) => {
                             <Route path="/category-post/:id" >
                               <CatePostClient/> 
                            </Route>
-                           <Route path="/post/:id" >
+                           <Route path="/post/:id/:idcate" >
                               <Post/> 
                            </Route>
 

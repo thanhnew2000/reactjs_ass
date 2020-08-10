@@ -6,6 +6,7 @@ import { useParams, Link } from 'react-router-dom';
 import ReactHtmlParser, { processNodes, convertNodeToElement, htmlparser2 } from 'react-html-parser';
 function Post(props) {
     let { id }  = useParams();
+    let { idcate }  = useParams();
 
     const [allPost,setAllpost] = useState([]);
     const [cates,setCate] = useState([]);
@@ -44,16 +45,15 @@ function Post(props) {
       useEffect(() => {
           async function getlist5Post(){
             try{
-              const {data} = await apiRequestPost.getPostOfCateRanDom(onePost.id_cate,5)
+              const {data} = await apiRequestPost.getPostOfCateRanDom(idcate,5)
               setList5Post(data);
-              console.log(data)
             }catch(error){
               console.log(error);
             }
           }
           getlist5Post()
         }, []);
-  
+
     return (
         <div>
             <div className="container">
@@ -63,6 +63,7 @@ function Post(props) {
                   {onePost.map((el,index)=>(
                       <div key={index}>
                         <h1>{el.title}</h1>
+                        <p>{el.time_published}</p>
                         <h3>{el.short_description}</h3>
                         <div>{ReactHtmlParser(el.content)}</div>
                       </div>
@@ -88,7 +89,7 @@ function Post(props) {
                             <img src={el.image} width="100px" height="70px"/>
                         </div>
                         <div className="col-md-8">
-                            <p><Link to={'../../post/'+el.id}>{el.title}</Link> </p>
+                            <p><Link to={'../../post/'+el.id+'/'+el.id_cate}>{el.title}</Link> </p>
                         </div>
                         <br/>
                         <br/>
