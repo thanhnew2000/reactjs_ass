@@ -11,17 +11,16 @@ function AddProduct({danhsach}) {
     const redColor = {color:'red'}
     const [valueInput,setValueInput] = useState({});
     const [motaChiTiet,setmotaChiTiet] = useState('');
+    const [price_Sale,setprice_Sale] = useState(0);
     const [image,setImage] = useState('');
     const { register, handleSubmit, watch, errors } = useForm();
     const history = useHistory();
 
-    // const onHandleChange = (e) => {
-    //     const {name,value} = e.target
-    //     setValueInput({
-    //         ...valueInput,
-    //         [name]:value
-    //     })
-    // }
+    const changeOldPrice = (e) => {
+        const {value} = e.target
+        setprice_Sale(value)
+    }
+
 
 
     const onInfoChange = (content, editor) => {
@@ -29,43 +28,44 @@ function AddProduct({danhsach}) {
       }
 
     function onSubmit (data){
-        // let file = data.feature_image[0];
-        // let storogeUrl=firebase.storage().ref(`images/${file.name}`);
-        // let uploadTask = storogeUrl.put(file)
-        // uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED);
+        let file = data.feature_image[0];
+        let storogeUrl=firebase.storage().ref(`images/${file.name}`);
+        let uploadTask = storogeUrl.put(file)
+        uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED);
 
 
-        // firebase.storage().ref().child(`images/${file.name}`).getDownloadURL().then((url)=>{
-        //     data.feature_image = url;
-        //     data.information = motaChiTiet;
-        //     apiRequest.create(data)
-        //     .then(function (response) {
-        //         Swal.fire({
-        //             title: 'Thêm mới thành công ',
-        //             icon: 'success',
-        //             showCancelButton: false,
-        //         }).then(function (response) {
-        //             history.push('../../admin/products');
-        //         })
-        //     })
-        // })
+        firebase.storage().ref().child(`images/${file.name}`).getDownloadURL().then((url)=>{
+            data.feature_image = url;
+            data.information = motaChiTiet;
+            apiRequest.create(data)
+            .then(function (response) {
+                Swal.fire({
+                    title: 'Thêm mới thành công ',
+                    icon: 'success',
+                    showCancelButton: false,
+                }).then(function (response) {
+                    history.push('../../admin/products');
+                })
+            })
+        })
 
         //  var target = event.target;
-        data.feature_image =  document.querySelector('#show_img').src;
-        data.information = motaChiTiet;
-        apiRequest.create(data)
-          .then(function (response) {
-            Swal.fire({
-                title: 'Thêm mới thành công ',
-                icon: 'success',
-                showCancelButton: false,
-              }).then(function (response) {
-                 history.push('../../admin/products');
-              })
-          })
-          .catch(function (error) {
-            console.log(error);
-          })
+        
+        // data.feature_image =  document.querySelector('#show_img').src;
+        // data.information = motaChiTiet;
+        // apiRequest.create(data)
+        //   .then(function (response) {
+        //     Swal.fire({
+        //         title: 'Thêm mới thành công ',
+        //         icon: 'success',
+        //         showCancelButton: false,
+        //       }).then(function (response) {
+        //          history.push('../../admin/products');
+        //       })
+        //   })
+        //   .catch(function (error) {
+        //     console.log(error);
+        //   })
     }
 
     
@@ -73,17 +73,17 @@ function AddProduct({danhsach}) {
         // console.log(e)
         //         document.querySelector('#show_img').src= e.target.value
 
-        var file = e.target
-        var fileSelected = file.files;
-        if(fileSelected.length > 0 ){
-            var fileToLoad = fileSelected[0];
-            var fileReader = new FileReader();
-            fileReader.onload= function(fileloadEvent){
-                var srcData= fileloadEvent.target.result;
-                document.querySelector('#show_img').src=srcData
-            }
-            fileReader.readAsDataURL(fileToLoad);
-        }
+        // var file = e.target
+        // var fileSelected = file.files;
+        // if(fileSelected.length > 0 ){
+        //     var fileToLoad = fileSelected[0];
+        //     var fileReader = new FileReader();
+        //     fileReader.onload= function(fileloadEvent){
+        //         var srcData= fileloadEvent.target.result;
+        //         document.querySelector('#show_img').src=srcData
+        //     }
+        //     fileReader.readAsDataURL(fileToLoad);
+        // }
     }
     return (
         <div>
@@ -107,7 +107,9 @@ function AddProduct({danhsach}) {
                     <div className="form-group">
                         <label htmlFor="inputPassword3" className="col-sm-2 control-label">Ảnh</label>
                         <div className="col-sm-10">
-                        <input  type="file" name="feature_image"  ref={register} onChange={loadImageFileAsURL} id="images" />
+                        <input  type="file" name="feature_image"  ref={register({ required: true })} 
+                        // onChange={loadImageFileAsURL}
+                         id="images" />
 
                         {/* <input type="text" className="form-control"  ref={register({ required: true })} name="feature_image"  placeholder="Ảnh sản phẩm" /> */}
                         {errors.feature_image && <p style={{color:'red'}}>Bạn chưa nhập ảnh</p>}
@@ -126,16 +128,16 @@ function AddProduct({danhsach}) {
                     <div className="form-group">
                         <label htmlFor="inputPassword3" className="col-sm-2 control-label">Giá cũ</label>
                         <div className="col-sm-10">
-                        <input type="number" className="form-control" ref={register({ required: true, mix:0 })} name="old_price" placeholder="Giá cũ" />
-                        {errors.price && <p style={{color:'red'}}>Bạn chưa nhập giá</p>}
+                        <input type="number" className="form-control" ref={register({ required: true, mix:0 })} name="old_price" onChange={changeOldPrice}  placeholder="Giá cũ" />
+                        {errors.old_price && <p style={{color:'red'}}>Bạn chưa nhập giá</p>}
                          </div>
                     </div>
 
                     <div className="form-group">
-                        <label htmlFor="inputPassword3" className="col-sm-2 control-label">Price</label>
+                        <label htmlFor="inputPassword3" className="col-sm-2 control-label">Giá </label>
                         <div className="col-sm-10">
-                        <input type="number" className="form-control" ref={register({ required: true, mix:0 })} name="price" placeholder="Giá" />
-                        {errors.price && <p style={{color:'red'}}>Bạn chưa nhập giá</p>}
+                        <input type="number" className="form-control" ref={register({ required: true,  mix:0 , max:price_Sale })} name="price" placeholder="Giá" />
+                        {errors.price && <p style={{color:'red'}}>Bạn chưa nhập giá và phải nhỏ hơn giá cũ</p>}
                          </div>
                     </div>
                     

@@ -9,11 +9,15 @@ import { Editor } from '@tinymce/tinymce-react';
 
 function EditCategory(props) {
     const redColor = {color:'red'}
+    
     const [valueInput,setValueInput] = useState({});
     const [motaChiTiet,setmotaChiTiet] = useState('');
     const { register, handleSubmit, watch, errors } = useForm();
     const history = useHistory();
     
+    const [productOfCate,setproductOfCate] = useState([]);
+
+
     let { id }  = useParams();
     // console.log(productEdit);
     const onHandleChange = (e) => {
@@ -38,6 +42,19 @@ function EditCategory(props) {
         getListCate()
       }, []);
 
+      useEffect(() => {
+        async function getListProductOfCate(){
+          try{
+            const {data} = await apiRequest.getProductOfCate(id)
+            setproductOfCate(data);
+          }catch(error){
+            console.log(error);
+          }
+        }
+        getListProductOfCate()
+      }, []);
+
+console.log(productOfCate)
       const onInfoChange = (content, editor) => {
         setmotaChiTiet(content.level.content);
       }
@@ -80,6 +97,33 @@ function EditCategory(props) {
             }
             fileReader.readAsDataURL(fileToLoad);
         }
+    }
+
+    function formatMoney(price) {
+      return new Intl.NumberFormat("vi-VN", {
+        style: "currency",
+        currency: "VND",
+      }).format(price);
+    }
+    
+    function trangThaiShow(quantity){
+      if(quantity <= 0){
+        return 'Hết hàng';
+      }else if(quantity <= 10){
+        return 'Sắp hết hàng'
+      }else {
+        return 'Còn hàng'
+      }
+    }
+    
+    function colortrangThaiShow(quantity){
+      if(quantity <= 0){
+        return 'red';
+      }else if(quantity <= 10){
+        return 'blue'
+      }else {
+        return 'green'
+      }
     }
 
 
@@ -140,7 +184,40 @@ function EditCategory(props) {
                      <img src={valueInput.image} id="show_img" width="300px" />
                   </div>
             </div>
-        </div>
+
+           <div className="container box box-info pull-right">     
+              <div className="row mt-2  ">
+                 <div className="col-md-11">
+                   <div className="box-body table-responsive no-padding">
+                <table className="table table-bordered">
+                  <tbody>
+                    <tr>
+                      <th style={{width: '10px'}} scope="col">Id</th>
+                          <th scope="col">Tên sản phẩm</th>
+                          <th scope="col">Ảnh</th>
+                          <th scope="col">Giá</th>
+                          <th scope="col">Số lượng</th>
+                          <th scope="col">Trạng thái</th>
+                    </tr>
+                    {productOfCate.map((el,index) => (
+                              <tr key={index}>
+                                  <th scope="row">{el.id}</th>
+                                  <td>{el.name_product} </td>
+                                  <td><img src={el.feature_image} width="100" /></td>
+                                  <td>{formatMoney(el.price)}</td>
+                                  <td>{el.quantity}</td>
+                                  <td style={{color:colortrangThaiShow(el.quantity)}}>{trangThaiShow(el.quantity)}</td>
+                                  <td>
+                                  </td>
+                              </tr>
+                          ))}
+                    </tbody>
+                  </table>
+                  </div>
+                </div>
+              </div>
+           </div>
+        </div>        
     )
 }
 

@@ -12,7 +12,6 @@ const Categorie = (props) => {
   const {danhsach} = props;
   const danhsachHavefillter =danhsach.filter(el => el.id !== 1);
   const danhsachHavefillter_detail = danhsachHavefillter.filter(el => el.id == id);
-  // console.log(danhsachHavefillter_detail)
   const styleContanerImage={
       position: 'relative',
       'text-align': 'center',

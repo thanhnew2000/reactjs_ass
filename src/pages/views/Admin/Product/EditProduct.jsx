@@ -116,7 +116,7 @@ function EditProduct({danhsach}) {
                         <label htmlFor="inputPassword3" className="col-sm-2 control-label">Giá cũ</label>
                         <div className="col-sm-10">
                         <input type="number" className="form-control" ref={register({ required: true })} name="old_price" value={valueInput.old_price} onChange={onHandleChange} placeholder="Giá" />
-                        {errors.price && <p style={{color:'red'}}>Bạn chưa nhập giá</p>}
+                        {errors.old_price && <p style={{color:'red'}}>Bạn chưa nhập giá</p>}
                          </div>
                     </div>
 

@@ -20,7 +20,6 @@ const remove = id => {
     return http.delete(`/product/${id}`);
 };
 
-
 const get4productFor5cate = () => {
     return http.get(`/product/product4/for5cate`);
 };

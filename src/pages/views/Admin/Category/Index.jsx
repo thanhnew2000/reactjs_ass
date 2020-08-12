@@ -9,20 +9,32 @@ import Pagination from '../../Categories/Pagination';
 function CategoryAdmin(props) {
   const history = useHistory();
   const [danhsach, setDanhSach] = useState([]);
-  useEffect(() => {
-    async function getList(){
-      try{
-        const {data} = await apiRequest.getAllCate()
-        console.log(data);
-        let newData = data.filter((el,index)=> (el.id != 1))
-        setDanhSach(newData);
-      }catch(error){
-        console.log(error);
-      }
-    }
-    getList()
-  }, []);
+  // useEffect(() => {
+  //   async function getList(){
+  //     try{
+  //       const {data} = await apiRequest.getAllCate()
+  //       console.log(data);
+  //       let newData = data.filter((el,index)=> (el.id != 1))
+  //       setDanhSach(newData);
+  //     }catch(error){
+  //       console.log(error);
+  //     }
+  //   }
+  //   getList()
+  // }, []);
 
+  const getListCate = () => {
+    apiRequest.getAllCate()
+    .then(function (response) {
+      let data = response.data
+      let newData = data.filter((el,index)=> (el.id != 1))
+      setDanhSach(newData);
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+};
+useEffect(getListCate, []);
 
   function deleteCate(id){
     Swal.fire({
@@ -36,7 +48,10 @@ function CategoryAdmin(props) {
             apiRequest.removeCate(id)
             .then(function (response) {
               console.log(response);
-              window.location.reload();
+              // window.location.reload();
+
+              getListCate();
+
             })
             .catch(function (error) {
               console.log(error);
@@ -75,7 +90,6 @@ useEffect(() => {
   }
   getList()
 }, []);
-console.log(totalProductCate[10])
     return (
         <div>
             <div className="box">

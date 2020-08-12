@@ -13,9 +13,23 @@ const getCate = id => {
 const getallHaveTotalProduct = () => {
     return http.get(`/cate/getallHaveTotalProduct`);
 };
+
 const test = () => {
     return http.get(`/cate/test`);
 };
+
+const searchFolowPrice = (key,id_cate) => {
+    return http.get(`/cate/searchFolowPrice/${key}/${id_cate}`);
+};
+
+const productCate = (id) => {
+    return http.get(`/cate/productCate/${id}`);
+};
+
+const getProductOfCate = (id_cate) => {
+    return http.get(`/cate/getProductOfCate/${id_cate}`);
+};
+
 
 const getTotalProduct = (id_cate) => {
     return http.get(`/cate/getTotalProduct/${id_cate}`);
@@ -34,6 +48,8 @@ const removeCate = id => {
 };
 
 
+
+
 export default {
     getAllCate,
     getCate,
@@ -42,5 +58,8 @@ export default {
     removeCate,
     getallHaveTotalProduct,
     getTotalProduct,
-    test
+    test,
+    getProductOfCate,
+    searchFolowPrice,
+    productCate
 };
